@@ -50,32 +50,16 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,json}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.{ts,tsx}": [
-      "prettier --write",
-      "tslint --fix",
-      "git add"
-    ]
+    "*.{js,jsx,json}": ["prettier --write", "git add"],
+    "*.{ts,tsx}": ["prettier --write", "tslint --fix", "git add"]
   },
   "jest": {
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testPathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "<rootDir>/build/"
-    ],
+    "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/build/"],
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json",
-      "jsx"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js", "json", "jsx"],
     "collectCoverage": true,
     "mapCoverage": true
   },

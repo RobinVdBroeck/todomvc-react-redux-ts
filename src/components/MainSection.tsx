@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { TodoFilters } from "../constants/TodoFilters";
-import Footer from "./Footer";
+import { Footer } from "./Footer";
 import TodoItem from "./TodoItem";
 
 const TODO_FILTERS = {

@@ -1,35 +1,33 @@
 import React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
+import { TodoFilters } from "../constants/TodoFilters";
+import { Footer } from "./Footer";
 import MainSection from "./MainSection";
 import TodoItem from "./TodoItem";
-import Footer from "./Footer";
-import { SHOW_ALL, SHOW_COMPLETED } from "../constants/TodoFilters";
 
 const setup = propOverrides => {
-  const props = Object.assign(
-    {
-      todos: [
-        {
-          text: "Use Redux",
-          completed: false,
-          id: 0
-        },
-        {
-          text: "Run the tests",
-          completed: true,
-          id: 1
-        }
-      ],
-      actions: {
-        editTodo: jest.fn(),
-        deleteTodo: jest.fn(),
-        completeTodo: jest.fn(),
-        completeAll: jest.fn(),
-        clearCompleted: jest.fn()
+  const props = {
+    todos: [
+      {
+        text: "Use Redux",
+        completed: false,
+        id: 0
+      },
+      {
+        text: "Run the tests",
+        completed: true,
+        id: 1
       }
+    ],
+    actions: {
+      editTodo: jest.fn(),
+      deleteTodo: jest.fn(),
+      completeTodo: jest.fn(),
+      completeAll: jest.fn(),
+      clearCompleted: jest.fn()
     },
-    propOverrides
-  );
+    ...propOverrides
+  };
 
   const renderer = createRenderer();
   renderer.render(<MainSection {...props} />);
@@ -84,20 +82,20 @@ describe("components", () => {
     describe("footer", () => {
       it("should render", () => {
         const { output } = setup();
-        const [, , footer] = output.props.children;
+        const footer = output.props.children[2];
         expect(footer.type).toBe(Footer);
         expect(footer.props.completedCount).toBe(1);
         expect(footer.props.activeCount).toBe(1);
-        expect(footer.props.filter).toBe(SHOW_ALL);
+        expect(footer.props.filter).toBe(TodoFilters.SHOW_ALL);
       });
 
       it("onShow should set the filter", () => {
         const { output, renderer } = setup();
-        const [, , footer] = output.props.children;
-        footer.props.onShow(SHOW_COMPLETED);
+        const footer = output.props.children[2];
+        footer.props.onShow(TodoFilters.SHOW_COMPLETED);
         const updated = renderer.getRenderOutput();
-        const [, , updatedFooter] = updated.props.children;
-        expect(updatedFooter.props.filter).toBe(SHOW_COMPLETED);
+        const updatedFooter = updated.props.children[2];
+        expect(updatedFooter.props.filter).toBe(TodoFilters.SHOW_COMPLETED);
       });
 
       it("onClearCompleted should call clearCompleted", () => {
@@ -123,7 +121,7 @@ describe("components", () => {
       it("should filter items", () => {
         const { output, renderer, props } = setup();
         const [, , footer] = output.props.children;
-        footer.props.onShow(SHOW_COMPLETED);
+        footer.props.onShow(TodoFilters.SHOW_COMPLETED);
         const updated = renderer.getRenderOutput();
         const [, updatedList] = updated.props.children;
         expect(updatedList.props.children.length).toBe(1);

@@ -1,9 +1,9 @@
-import React from "react";
+import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
 import { TodoFilters } from "../constants/TodoFilters";
-import Footer from "./Footer";
+import { Footer, IProps as IFooterProps } from "./Footer";
 
-const setup = propOverrides => {
+const setup = (propOverrides: Partial<IFooterProps> = {}) => {
   const props = {
     completedCount: 0,
     activeCount: 0,
@@ -23,14 +23,16 @@ const setup = propOverrides => {
   };
 };
 
-const getTextContent = elem => {
+const getTextContent = (
+  elem: React.ReactElement<{ children: any }>
+): string => {
   const children = Array.isArray(elem.props.children)
     ? elem.props.children
     : [elem.props.children];
 
   return children.reduce(
     (
-      out,
+      out: string,
       child // Concatenate the text
     ) =>
       // Children are either elements or text strings
@@ -61,7 +63,7 @@ describe("components", () => {
 
     it("should render filters", () => {
       const { output } = setup();
-      const [, filters] = output.props.children;
+      const filters = output.props.children[1];
       expect(filters.type).toBe("ul");
       expect(filters.props.className).toBe("filters");
       expect(filters.props.children.length).toBe(3);
@@ -69,19 +71,13 @@ describe("components", () => {
         expect(filter.type).toBe("li");
         const a = filter.props.children;
         expect(a.props.className).toBe(i === 0 ? "selected" : "");
-        expect(a.props.children).toBe(
-          {
-            0: "All",
-            1: "Active",
-            2: "Completed"
-          }[i]
-        );
+        expect(a.props.children).toBe(["All", "Active", "Completed"][i]);
       });
     });
 
     it("should call onShow when a filter is clicked", () => {
       const { output, props } = setup();
-      const [, filters] = output.props.children;
+      const filters = output.props.children[1];
       const filterLink = filters.props.children[1].props.children;
       filterLink.props.onClick({});
       expect(props.onShow).toBeCalledWith(TodoFilters.SHOW_ACTIVE);
@@ -89,20 +85,20 @@ describe("components", () => {
 
     it("shouldnt show clear button when no completed todos", () => {
       const { output } = setup({ completedCount: 0 });
-      const [, , clear] = output.props.children;
+      const clear = output.props.children[2];
       expect(clear).toBe(undefined);
     });
 
     it("should render clear button when completed todos", () => {
       const { output } = setup({ completedCount: 1 });
-      const [, , clear] = output.props.children;
+      const clear = output.props.children[2];
       expect(clear.type).toBe("button");
       expect(clear.props.children).toBe("Clear completed");
     });
 
     it("should call onClearCompleted on clear button click", () => {
       const { output, props } = setup({ completedCount: 1 });
-      const [, , clear] = output.props.children;
+      const clear = output.props.children[2];
       clear.props.onClick({});
       expect(props.onClearCompleted).toBeCalled();
     });

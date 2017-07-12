@@ -1,28 +1,43 @@
 import classnames from "classnames";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import {
-  SHOW_ACTIVE,
-  SHOW_ALL,
-  SHOW_COMPLETED
-} from "../constants/TodoFilters";
+import * as React from "react";
+import { TodoFilters } from "../constants/TodoFilters";
 
 const FILTER_TITLES = {
-  [SHOW_ALL]: "All",
-  [SHOW_ACTIVE]: "Active",
-  [SHOW_COMPLETED]: "Completed"
+  [TodoFilters.SHOW_ALL]: "All",
+  [TodoFilters.SHOW_ACTIVE]: "Active",
+  [TodoFilters.SHOW_COMPLETED]: "Completed"
 };
 
-export default class Footer extends Component {
-  static propTypes = {
-    completedCount: PropTypes.number.isRequired,
-    activeCount: PropTypes.number.isRequired,
-    filter: PropTypes.string.isRequired,
-    onClearCompleted: PropTypes.func.isRequired,
-    onShow: PropTypes.func.isRequired
-  };
+export interface IProps {
+  completedCount: number;
+  activeCount: number;
+  filter: TodoFilters;
+  onClearCompleted(): void; // Todo Find out the type
+  onShow(filter: TodoFilters): void; // Todo find out the type
+}
 
-  renderTodoCount() {
+export class Footer extends React.Component<IProps, {}> {
+  public render() {
+    return (
+      <footer className="footer">
+        {this.renderTodoCount()}
+        <ul className="filters">
+          {[
+            TodoFilters.SHOW_ALL,
+            TodoFilters.SHOW_ACTIVE,
+            TodoFilters.SHOW_COMPLETED
+          ].map(filter =>
+            <li key={filter}>
+              {this.renderFilterLink(filter)}
+            </li>
+          )}
+        </ul>
+        {this.renderClearButton()}
+      </footer>
+    );
+  }
+
+  private renderTodoCount() {
     const { activeCount } = this.props;
     const itemWord = activeCount === 1 ? "item" : "items";
 
@@ -33,13 +48,15 @@ export default class Footer extends Component {
     );
   }
 
-  renderFilterLink(filter) {
+  private renderFilterLink(filter: TodoFilters) {
     const title = FILTER_TITLES[filter];
     const { filter: selectedFilter, onShow } = this.props;
 
     return (
       <a
-        className={classnames({ selected: filter === selectedFilter })}
+        className={classnames({
+          selected: filter === selectedFilter
+        })}
         style={{ cursor: "pointer" }}
         onClick={() => onShow(filter)}
       >
@@ -48,7 +65,7 @@ export default class Footer extends Component {
     );
   }
 
-  renderClearButton() {
+  private renderClearButton() {
     const { completedCount, onClearCompleted } = this.props;
     if (completedCount > 0) {
       return (
@@ -57,21 +74,5 @@ export default class Footer extends Component {
         </button>
       );
     }
-  }
-
-  render() {
-    return (
-      <footer className="footer">
-        {this.renderTodoCount()}
-        <ul className="filters">
-          {[SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED].map(filter =>
-            <li key={filter}>
-              {this.renderFilterLink(filter)}
-            </li>
-          )}
-        </ul>
-        {this.renderClearButton()}
-      </footer>
-    );
   }
 }
