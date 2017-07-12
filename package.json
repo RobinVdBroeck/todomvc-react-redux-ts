@@ -1,8 +1,7 @@
 {
-  "name": "gg-time",
+  "name": "todomvc-react-redux-ts",
   "version": "1.0.0",
-  "description": "All your websites in one",
-  "main": "index.js",
+  "description": "TodoMvc with react, redux and typescript",
   "author": "Robin Van den Broeck <robin.broeck@gmail.com>",
   "license": "ISC",
   "devDependencies": {
