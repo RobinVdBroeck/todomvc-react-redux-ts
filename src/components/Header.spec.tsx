@@ -1,8 +1,8 @@
 import React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
 
-import Header from "./Header";
-import TodoTextInput from "./TodoTextInput";
+import { Header } from "./Header";
+import { TodoTextInput } from "./TodoTextInput";
 
 const setup = () => {
   const props = {
@@ -29,7 +29,6 @@ describe("components", () => {
       expect(output.props.className).toBe("header");
 
       const [h1, input] = output.props.children;
-
       expect(h1.type).toBe("h1");
       expect(h1.props.children).toBe("todos");
 

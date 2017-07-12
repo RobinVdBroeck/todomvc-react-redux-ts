@@ -1,21 +1,44 @@
 import classnames from "classnames";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as React from "react";
 
-export default class TodoTextInput extends Component {
-  static propTypes = {
-    onSave: PropTypes.func.isRequired,
-    text: PropTypes.string,
-    placeholder: PropTypes.string,
-    editing: PropTypes.bool,
-    newTodo: PropTypes.bool
-  };
+export interface IProps {
+  text?: string;
+  placeholder: string;
+  editing: boolean;
+  newTodo: boolean;
+  onSave(text: string): void; // TODO: Is this the correct type?
+}
+export interface IState {
+  text: string;
+}
 
-  state = {
-    text: this.props.text || ""
-  };
+export class TodoTextInput extends React.Component<IProps, IState> {
+  public static defaultProps: Partial<IProps> = { text: "" };
 
-  handleSubmit = e => {
+  constructor(props: IProps) {
+    super(props);
+    this.state = { text: this.props.text as string };
+  }
+
+  public render() {
+    return (
+      <input
+        className={classnames({
+          edit: this.props.editing,
+          "new-todo": this.props.newTodo
+        })}
+        type="text"
+        placeholder={this.props.placeholder}
+        autoFocus={true}
+        value={this.state.text}
+        onBlur={this.handleBlur}
+        onChange={this.handleChange}
+        onKeyDown={this.handleSubmit}
+      />
+    );
+  }
+
+  private handleSubmit = e => {
     const text = e.target.value.trim();
     if (e.which === 13) {
       this.props.onSave(text);
@@ -25,31 +48,13 @@ export default class TodoTextInput extends Component {
     }
   };
 
-  handleChange = e => {
+  private handleChange = e => {
     this.setState({ text: e.target.value });
   };
 
-  handleBlur = e => {
+  private handleBlur = e => {
     if (!this.props.newTodo) {
       this.props.onSave(e.target.value);
     }
   };
-
-  render() {
-    return (
-      <input
-        className={classnames({
-          edit: this.props.editing,
-          "new-todo": this.props.newTodo
-        })}
-        type="text"
-        placeholder={this.props.placeholder}
-        autoFocus="true"
-        value={this.state.text}
-        onBlur={this.handleBlur}
-        onChange={this.handleChange}
-        onKeyDown={this.handleSubmit}
-      />
-    );
-  }
 }

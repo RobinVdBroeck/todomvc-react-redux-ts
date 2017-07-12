@@ -1,8 +1,8 @@
 import React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
-import TodoTextInput from "./TodoTextInput";
+import { IProps, IState, TodoTextInput } from "./TodoTextInput";
 
-const setup = propOverrides => {
+const setup = (propOverrides: Partial<IProps> = {}) => {
   const props = {
     onSave: jest.fn(),
     text: "Use Redux",

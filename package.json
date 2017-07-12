@@ -42,7 +42,7 @@
     "webpack-dev-server": "^2.5.1"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --no-cache",
     "build": "tsc",
     "bundle": "webpack -p",
     "start": "webpack-dev-server --open",
