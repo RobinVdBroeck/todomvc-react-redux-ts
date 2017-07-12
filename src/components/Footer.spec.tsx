@@ -1,19 +1,17 @@
 import React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
+import { TodoFilters } from "../constants/TodoFilters";
 import Footer from "./Footer";
-import { SHOW_ALL, SHOW_ACTIVE } from "../constants/TodoFilters";
 
 const setup = propOverrides => {
-  const props = Object.assign(
-    {
-      completedCount: 0,
-      activeCount: 0,
-      filter: SHOW_ALL,
-      onClearCompleted: jest.fn(),
-      onShow: jest.fn()
-    },
-    propOverrides
-  );
+  const props = {
+    completedCount: 0,
+    activeCount: 0,
+    filter: TodoFilters.SHOW_ALL,
+    onClearCompleted: jest.fn(),
+    onShow: jest.fn(),
+    ...propOverrides
+  };
 
   const renderer = createRenderer();
   renderer.render(<Footer {...props} />);
@@ -31,8 +29,10 @@ const getTextContent = elem => {
     : [elem.props.children];
 
   return children.reduce(
-    (out, child) =>
-      // Concatenate the text
+    (
+      out,
+      child // Concatenate the text
+    ) =>
       // Children are either elements or text strings
       out + (child.props ? getTextContent(child) : child),
     ""
@@ -84,7 +84,7 @@ describe("components", () => {
       const [, filters] = output.props.children;
       const filterLink = filters.props.children[1].props.children;
       filterLink.props.onClick({});
-      expect(props.onShow).toBeCalledWith(SHOW_ACTIVE);
+      expect(props.onShow).toBeCalledWith(TodoFilters.SHOW_ACTIVE);
     });
 
     it("shouldnt show clear button when no completed todos", () => {

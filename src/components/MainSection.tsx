@@ -1,17 +1,13 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import {
-  SHOW_ACTIVE,
-  SHOW_ALL,
-  SHOW_COMPLETED
-} from "../constants/TodoFilters";
+import { TodoFilters } from "../constants/TodoFilters";
 import Footer from "./Footer";
 import TodoItem from "./TodoItem";
 
 const TODO_FILTERS = {
-  [SHOW_ALL]: () => true,
-  [SHOW_ACTIVE]: todo => !todo.completed,
-  [SHOW_COMPLETED]: todo => todo.completed
+  [TodoFilters.SHOW_ALL]: () => true,
+  [TodoFilters.SHOW_ACTIVE]: todo => !todo.completed,
+  [TodoFilters.SHOW_COMPLETED]: todo => todo.completed
 };
 
 export default class MainSection extends Component {
@@ -20,7 +16,7 @@ export default class MainSection extends Component {
     actions: PropTypes.object.isRequired
   };
 
-  state = { filter: SHOW_ALL };
+  state = { filter: TodoFilters.SHOW_ALL };
 
   handleClearCompleted = () => {
     this.props.actions.clearCompleted();
