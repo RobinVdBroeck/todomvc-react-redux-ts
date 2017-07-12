@@ -1,0 +1,10 @@
+node_modules/
+build/
+dist/
+coverage/
+
+# Only while we still in development since there shouldn't be that many breakages
+# and we want to use the latest version of libraries
+# This should get removed in production since we want the same dependencies on each
+# distrubition
+package-lock.json
