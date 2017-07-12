@@ -1,0 +1,5 @@
+langauge: node_js
+node_js:
+  - "node"
+before_install:
+  - npm install -g npm@5
