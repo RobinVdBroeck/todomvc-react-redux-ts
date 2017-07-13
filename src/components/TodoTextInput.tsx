@@ -3,17 +3,20 @@ import * as React from "react";
 
 export interface IProps {
   text?: string;
-  placeholder: string;
+  placeholder?: string;
   editing: boolean;
-  newTodo: boolean;
-  onSave(text: string): void; // TODO: Is this the correct type?
+  newTodo?: boolean;
+  onSave(text: string): void;
 }
 export interface IState {
   text: string;
 }
 
 export class TodoTextInput extends React.Component<IProps, IState> {
-  public static defaultProps: Partial<IProps> = { text: "" };
+  public static defaultProps: Partial<IProps> = {
+    text: "",
+    newTodo: true
+  };
 
   constructor(props: IProps) {
     super(props);

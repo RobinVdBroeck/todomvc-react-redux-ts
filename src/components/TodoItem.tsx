@@ -1,34 +1,27 @@
 import classnames from "classnames";
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as React from "react";
+import { ITodo } from "../interfaces/ITodo";
 import { TodoTextInput } from "./TodoTextInput";
 
-export default class TodoItem extends Component {
-  static propTypes = {
-    todo: PropTypes.object.isRequired,
-    editTodo: PropTypes.func.isRequired,
-    deleteTodo: PropTypes.func.isRequired,
-    completeTodo: PropTypes.func.isRequired
-  };
+export interface IProps {
+  todo: ITodo;
+  editTodo(id: number, text: string): void;
+  deleteTodo(id: number): void;
+  completeTodo(id: number): void;
+}
 
-  state = {
-    editing: false
-  };
+interface IState {
+  editing: boolean;
+}
 
-  handleDoubleClick = () => {
-    this.setState({ editing: true });
-  };
+export class TodoItem extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = { editing: false };
+  }
 
-  handleSave = (id, text) => {
-    if (text.length === 0) {
-      this.props.deleteTodo(id);
-    } else {
-      this.props.editTodo(id, text);
-    }
-    this.setState({ editing: false });
-  };
-
-  render() {
+  public render() {
     const { todo, completeTodo, deleteTodo } = this.props;
 
     let element;
@@ -68,4 +61,17 @@ export default class TodoItem extends Component {
       </li>
     );
   }
+
+  private handleDoubleClick = () => {
+    this.setState({ editing: true });
+  };
+
+  private handleSave = (id: number, text: string) => {
+    if (text.length === 0) {
+      this.props.deleteTodo(id);
+    } else {
+      this.props.editTodo(id, text);
+    }
+    this.setState({ editing: false });
+  };
 }

@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { TodoFilters } from "../constants/TodoFilters";
 import { Footer } from "./Footer";
-import TodoItem from "./TodoItem";
+import { TodoItem } from "./TodoItem";
 
 const TODO_FILTERS = {
   [TodoFilters.SHOW_ALL]: () => true,
@@ -18,15 +18,15 @@ export default class MainSection extends Component {
 
   state = { filter: TodoFilters.SHOW_ALL };
 
-  handleClearCompleted = () => {
+  private handleClearCompleted = () => {
     this.props.actions.clearCompleted();
   };
 
-  handleShow = filter => {
+  private handleShow = filter => {
     this.setState({ filter });
   };
 
-  renderToggleAll(completedCount) {
+  private renderToggleAll(completedCount) {
     const { todos, actions } = this.props;
     if (todos.length > 0) {
       return (
@@ -40,7 +40,7 @@ export default class MainSection extends Component {
     }
   }
 
-  renderFooter(completedCount) {
+  private renderFooter(completedCount) {
     const { todos } = this.props;
     const { filter } = this.state;
     const activeCount = todos.length - completedCount;
@@ -58,7 +58,7 @@ export default class MainSection extends Component {
     }
   }
 
-  render() {
+  public render() {
     const { todos, actions } = this.props;
     const { filter } = this.state;
 

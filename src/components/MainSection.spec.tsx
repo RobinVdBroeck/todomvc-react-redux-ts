@@ -3,7 +3,7 @@ import { createRenderer } from "react-test-renderer/shallow";
 import { TodoFilters } from "../constants/TodoFilters";
 import { Footer } from "./Footer";
 import MainSection from "./MainSection";
-import TodoItem from "./TodoItem";
+import { TodoItem } from "./TodoItem";
 
 const setup = propOverrides => {
   const props = {

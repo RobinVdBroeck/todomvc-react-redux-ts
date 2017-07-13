@@ -67,7 +67,8 @@ describe("components", () => {
       expect(filters.type).toBe("ul");
       expect(filters.props.className).toBe("filters");
       expect(filters.props.children.length).toBe(3);
-      filters.props.children.forEach(function checkFilter(filter, i) {
+      filters.props.children.forEach((filter: any, i: number) => {
+        // TODO: find out the type of filteer
         expect(filter.type).toBe("li");
         const a = filter.props.children;
         expect(a.props.className).toBe(i === 0 ? "selected" : "");
