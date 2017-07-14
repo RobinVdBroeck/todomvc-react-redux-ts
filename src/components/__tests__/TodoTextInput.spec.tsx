@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
-import { IProps, IState, TodoTextInput } from "./TodoTextInput";
+import { IProps, IState, TodoTextInput } from "../TodoTextInput";
 
 const setup = (propOverrides: Partial<IProps> = {}) => {
   const props = {

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
-import { TodoFilters } from "../constants/TodoFilters";
-import { Footer } from "./Footer";
-import { IProps, MainSection } from "./MainSection";
-import { TodoItem } from "./TodoItem";
+import { TodoFilters } from "../../constants/TodoFilters";
+import { Footer } from "../Footer";
+import { IProps, MainSection } from "../MainSection";
+import { TodoItem } from "../TodoItem";
 
 const setup = (propOverrides: Partial<IProps> = {}) => {
   const props = {

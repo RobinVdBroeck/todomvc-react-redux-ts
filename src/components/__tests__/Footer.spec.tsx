@@ -2,8 +2,8 @@ import { mount, shallow } from "enzyme";
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
 import * as sinon from "sinon";
-import { TodoFilters } from "../constants/TodoFilters";
-import { FILTER_TITLES, Footer, IProps } from "./Footer";
+import { TodoFilters } from "../../constants/TodoFilters";
+import { FILTER_TITLES, Footer, IProps } from "../Footer";
 
 const defaultProps: IProps = {
   completedCount: 0,
