@@ -13,6 +13,10 @@ const defaultProps: IProps = {
   onShow: jest.fn()
 };
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 it("should render container with class footer", () => {
   const footer = shallow(<Footer {...defaultProps} />);
   expect(footer.type()).toBe("footer");

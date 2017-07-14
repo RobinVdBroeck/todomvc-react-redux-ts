@@ -28,6 +28,10 @@ const defaultProps: IProps = {
   }
 };
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 it("should render container", () => {
   const mainSection = shallow(<MainSection {...defaultProps} />);
   expect(mainSection.type()).toBe("section");

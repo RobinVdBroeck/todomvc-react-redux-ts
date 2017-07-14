@@ -15,32 +15,9 @@ const defaultProps: IProps = {
   completeTodo: jest.fn()
 };
 
-const setup = (editing = false) => {
-  const props = {
-    todo: { id: 0, text: "Use Redux", completed: false },
-    editTodo: jest.fn(),
-    deleteTodo: jest.fn(),
-    completeTodo: jest.fn()
-  };
-
-  const renderer = createRenderer();
-
-  renderer.render(<TodoItem {...props} />);
-
-  let output = renderer.getRenderOutput();
-
-  if (editing) {
-    const label = output.props.children.props.children[1];
-    label.props.onDoubleClick({});
-    output = renderer.getRenderOutput();
-  }
-
-  return {
-    props,
-    output,
-    renderer
-  };
-};
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 it("initial render", () => {
   const todoItem = shallow(<TodoItem {...defaultProps} />);

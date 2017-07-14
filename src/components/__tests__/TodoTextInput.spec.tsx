@@ -12,7 +12,7 @@ const defaultProps: IProps = {
 };
 
 beforeEach(() => {
-  defaultProps.onSave = jest.fn();
+  jest.clearAllMocks();
 });
 
 it("should render correctly", () => {

@@ -7,6 +7,10 @@ const defaultProps: IProps = {
   addTodo: jest.fn()
 };
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 it("should render correctly", () => {
   const header = shallow(<Header {...defaultProps} />);
 
