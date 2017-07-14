@@ -1,49 +1,34 @@
+import { shallow, ShallowWrapper } from "enzyme";
 import * as React from "react";
-import { createRenderer } from "react-test-renderer/shallow";
+import { Header, IProps } from "../Header";
+import { IProps as ITodoTextInputProps, TodoTextInput } from "../TodoTextInput";
 
-import { Header } from "../Header";
-import { TodoTextInput } from "../TodoTextInput";
-
-const setup = () => {
-  const props = {
-    addTodo: jest.fn()
-  };
-
-  const renderer = createRenderer();
-  renderer.render(<Header {...props} />);
-  const output = renderer.getRenderOutput();
-
-  return {
-    props,
-    output,
-    renderer
-  };
+const defaultProps: IProps = {
+  addTodo: jest.fn()
 };
 
-describe("components", () => {
-  describe("Header", () => {
-    it("should render correctly", () => {
-      const { output } = setup();
+it("should render correctly", () => {
+  const header = shallow(<Header {...defaultProps} />);
 
-      expect(output.type).toBe("header");
-      expect(output.props.className).toBe("header");
+  expect(header.type()).toBe("header");
+  expect(header.hasClass("header")).toBe(true);
 
-      const [h1, input] = output.props.children;
-      expect(h1.type).toBe("h1");
-      expect(h1.props.children).toBe("todos");
+  const h1 = header.children().at(0);
+  expect(h1.type()).toBe("h1");
+  expect(h1.text()).toBe("todos");
 
-      expect(input.type).toBe(TodoTextInput);
-      expect(input.props.newTodo).toBe(true);
-      expect(input.props.placeholder).toBe("What needs to be done?");
-    });
+  const input = header.children().at(1);
+  expect(input.type()).toBe(TodoTextInput);
+  expect(input.props().newTodo).toBe(true);
+  expect(input.props().placeholder).toBe("What needs to be done?");
+});
 
-    it("should call addTodo if length of text is greater than 0", () => {
-      const { output, props } = setup();
-      const input = output.props.children[1];
-      input.props.onSave("");
-      expect(props.addTodo).not.toBeCalled();
-      input.props.onSave("Use Redux");
-      expect(props.addTodo).toBeCalled();
-    });
-  });
+it("should call addTodo if length of text is greater than 0", () => {
+  const header = shallow(<Header {...defaultProps} />);
+
+  const input = header.children().at(1);
+  input.props().onSave("");
+  expect(defaultProps.addTodo).not.toBeCalled();
+  input.props().onSave("Use Redux");
+  expect(defaultProps.addTodo).toBeCalled();
 });
