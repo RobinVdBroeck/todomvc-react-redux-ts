@@ -36,7 +36,7 @@ it("should render container", () => {
 
 describe("toggle all input", () => {
   it("should render", () => {
-    const mainSection = mount(<MainSection {...defaultProps} />);
+    const mainSection = shallow(<MainSection {...defaultProps} />);
 
     const toggle = mainSection.childAt(0);
     expect(toggle.type()).toBe("input");
@@ -46,7 +46,9 @@ describe("toggle all input", () => {
 
   it("should be checked if all todos completed", () => {
     const todos = [{ text: "Use Redux", completed: true, id: 0 }];
-    const mainSection = mount(<MainSection {...defaultProps} todos={todos} />);
+    const mainSection = shallow(
+      <MainSection {...defaultProps} todos={todos} />
+    );
     const toggle = mainSection.childAt(0);
     expect(toggle.props().checked).toBe(true);
   });
@@ -78,7 +80,7 @@ describe("footer", () => {
   });
 
   it("onClearCompleted should call clearCompleted", () => {
-    const mainSection = mount(<MainSection {...defaultProps} />);
+    const mainSection = shallow(<MainSection {...defaultProps} />);
     const footer = mainSection.childAt(2);
     footer.props().onClearCompleted();
     expect(defaultProps.actions.clearCompleted).toBeCalled();
@@ -100,7 +102,7 @@ describe("todo list", () => {
   });
 
   it("should filter items", () => {
-    const mainSection = mount(<MainSection {...defaultProps} />);
+    const mainSection = shallow(<MainSection {...defaultProps} />);
     const footer = mainSection.childAt(2);
     footer.props().onShow(TodoFilters.SHOW_COMPLETED);
     const list = mainSection.childAt(1);

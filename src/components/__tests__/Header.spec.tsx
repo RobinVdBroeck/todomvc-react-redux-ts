@@ -1,4 +1,4 @@
-import { shallow, ShallowWrapper } from "enzyme";
+import { shallow } from "enzyme";
 import * as React from "react";
 import { Header, IProps } from "../Header";
 import { IProps as ITodoTextInputProps, TodoTextInput } from "../TodoTextInput";
