@@ -1,132 +1,111 @@
+import { CommonWrapper, mount, shallow } from "enzyme";
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
 import { TodoFilters } from "../../constants/TodoFilters";
 import { Footer } from "../Footer";
 import { IProps, MainSection } from "../MainSection";
-import { TodoItem } from "../TodoItem";
+import { IProps as ITodoItemProps, TodoItem } from "../TodoItem";
 
-const setup = (propOverrides: Partial<IProps> = {}) => {
-  const props = {
-    todos: [
-      {
-        text: "Use Redux",
-        completed: false,
-        id: 0
-      },
-      {
-        text: "Run the tests",
-        completed: true,
-        id: 1
-      }
-    ],
-    actions: {
-      editTodo: jest.fn(),
-      deleteTodo: jest.fn(),
-      completeTodo: jest.fn(),
-      completeAll: jest.fn(),
-      clearCompleted: jest.fn()
+const defaultProps: IProps = {
+  todos: [
+    {
+      text: "Use Redux",
+      completed: false,
+      id: 0
     },
-    ...propOverrides
-  };
-
-  const renderer = createRenderer();
-  renderer.render(<MainSection {...props} />);
-  const output = renderer.getRenderOutput();
-
-  return {
-    props,
-    output,
-    renderer
-  };
+    {
+      text: "Run the tests",
+      completed: true,
+      id: 1
+    }
+  ],
+  actions: {
+    editTodo: jest.fn(),
+    deleteTodo: jest.fn(),
+    completeTodo: jest.fn(),
+    completeAll: jest.fn(),
+    clearCompleted: jest.fn()
+  }
 };
 
-describe("components", () => {
-  describe("MainSection", () => {
-    it("should render container", () => {
-      const { output } = setup();
-      expect(output.type).toBe("section");
-      expect(output.props.className).toBe("main");
-    });
+it("should render container", () => {
+  const mainSection = shallow(<MainSection {...defaultProps} />);
+  expect(mainSection.type()).toBe("section");
+  expect(mainSection.hasClass("main")).toBe(true);
+});
 
-    describe("toggle all input", () => {
-      it("should render", () => {
-        const { output } = setup();
-        const [toggle] = output.props.children;
-        expect(toggle.type).toBe("input");
-        expect(toggle.props.type).toBe("checkbox");
-        expect(toggle.props.checked).toBe(false);
-      });
+describe("toggle all input", () => {
+  it("should render", () => {
+    const mainSection = mount(<MainSection {...defaultProps} />);
 
-      it("should be checked if all todos completed", () => {
-        const { output } = setup({
-          todos: [
-            {
-              text: "Use Redux",
-              completed: true,
-              id: 0
-            }
-          ]
-        });
-        const [toggle] = output.props.children;
-        expect(toggle.props.checked).toBe(true);
-      });
+    const toggle = mainSection.childAt(0);
+    expect(toggle.type()).toBe("input");
+    expect(toggle.props().type).toBe("checkbox");
+    expect(toggle.props().checked).toBe(false);
+  });
 
-      it("should call completeAll on change", () => {
-        const { output, props } = setup();
-        const [toggle] = output.props.children;
-        toggle.props.onChange({});
-        expect(props.actions.completeAll).toBeCalled();
-      });
-    });
+  it("should be checked if all todos completed", () => {
+    const todos = [{ text: "Use Redux", completed: true, id: 0 }];
+    const mainSection = mount(<MainSection {...defaultProps} todos={todos} />);
+    const toggle = mainSection.childAt(0);
+    expect(toggle.props().checked).toBe(true);
+  });
 
-    describe("footer", () => {
-      it("should render", () => {
-        const { output } = setup();
-        const footer = output.props.children[2];
-        expect(footer.type).toBe(Footer);
-        expect(footer.props.completedCount).toBe(1);
-        expect(footer.props.activeCount).toBe(1);
-        expect(footer.props.filter).toBe(TodoFilters.SHOW_ALL);
-      });
+  it("should call completeAll on change", () => {
+    const mainSection = mount(<MainSection {...defaultProps} />);
+    const toggle = mainSection.childAt(0);
+    toggle.props().onChange({});
+    expect(mainSection.props().actions.completeAll).toBeCalled();
+  });
+});
 
-      it("onShow should set the filter", () => {
-        const { output, renderer } = setup();
-        const footer = output.props.children[2];
-        footer.props.onShow(TodoFilters.SHOW_COMPLETED);
-        const updated = renderer.getRenderOutput();
-        const updatedFooter = updated.props.children[2];
-        expect(updatedFooter.props.filter).toBe(TodoFilters.SHOW_COMPLETED);
-      });
+describe("footer", () => {
+  it("should render", () => {
+    const mainSection = shallow(<MainSection {...defaultProps} />);
+    const footer = mainSection.childAt(2);
+    expect(footer.type()).toBe(Footer);
+    expect(footer.props().completedCount).toBe(1);
+    expect(footer.props().activeCount).toBe(1);
+    expect(footer.props().filter).toBe(TodoFilters.SHOW_ALL);
+  });
 
-      it("onClearCompleted should call clearCompleted", () => {
-        const { output, props } = setup();
-        const footer = output.props.children[2];
-        footer.props.onClearCompleted();
-        expect(props.actions.clearCompleted).toBeCalled();
-      });
-    });
+  it("onShow should set the filter", () => {
+    const mainSection = mount(<MainSection {...defaultProps} />);
+    const footer = mainSection.childAt(2);
+    expect(footer.props().filter).toBe(TodoFilters.SHOW_ALL);
+    footer.props().onShow(TodoFilters.SHOW_COMPLETED);
+    expect(footer.props().filter).toBe(TodoFilters.SHOW_COMPLETED);
+  });
 
-    describe("todo list", () => {
-      it("should render", () => {
-        const { output, props } = setup();
-        const list = output.props.children[1];
-        expect(list.type).toBe("ul");
-        expect(list.props.children.length).toBe(2);
-        list.props.children.forEach((item, i) => {
-          expect(item.type).toBe(TodoItem);
-          expect(item.props.todo).toBe(props.todos[i]);
-        });
-      });
+  it("onClearCompleted should call clearCompleted", () => {
+    const mainSection = mount(<MainSection {...defaultProps} />);
+    const footer = mainSection.childAt(2);
+    footer.props().onClearCompleted();
+    expect(defaultProps.actions.clearCompleted).toBeCalled();
+  });
+});
 
-      it("should filter items", () => {
-        const { output, renderer, props } = setup();
-        const footer = output.props.children[2];
-        footer.props.onShow(TodoFilters.SHOW_COMPLETED);
-        const updated = renderer.getRenderOutput();
-        const [, updatedList] = updated.props.children;
-        expect(updatedList.props.children.length).toBe(1);
-        expect(updatedList.props.children[0].props.todo).toBe(props.todos[1]);
-      });
-    });
+describe("todo list", () => {
+  const todoItemToTodoString = (item: CommonWrapper<ITodoItemProps, any>) =>
+    item.props().todo;
+
+  it("should render", () => {
+    const mainSection = shallow(<MainSection {...defaultProps} />);
+    const list = mainSection.childAt(1);
+    expect(list.type()).toBe("ul");
+    const todos = list.children();
+    expect(todos.length).toBe(2);
+    expect(todos.everyWhere(todo => todo.type() === TodoItem)).toBe(true);
+    expect(todos.map(todoItemToTodoString)).toEqual(defaultProps.todos);
+  });
+
+  it("should filter items", () => {
+    const mainSection = mount(<MainSection {...defaultProps} />);
+    const footer = mainSection.childAt(2);
+    footer.props().onShow(TodoFilters.SHOW_COMPLETED);
+    const list = mainSection.childAt(1);
+    expect(list.children()).toHaveLength(1);
+    const expectedTodos = defaultProps.todos.filter(todo => todo.completed);
+    expect(list.children().map(todoItemToTodoString)).toEqual(expectedTodos);
   });
 });
