@@ -1,107 +1,77 @@
+import { mount, shallow } from "enzyme";
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
+import * as sinon from "sinon";
 import { TodoFilters } from "../constants/TodoFilters";
-import { Footer, IProps as IFooterProps } from "./Footer";
+import { FILTER_TITLES, Footer, IProps } from "./Footer";
 
-const setup = (propOverrides: Partial<IFooterProps> = {}) => {
-  const props = {
-    completedCount: 0,
-    activeCount: 0,
-    filter: TodoFilters.SHOW_ALL,
-    onClearCompleted: jest.fn(),
-    onShow: jest.fn(),
-    ...propOverrides
-  };
-
-  const renderer = createRenderer();
-  renderer.render(<Footer {...props} />);
-  const output = renderer.getRenderOutput();
-
-  return {
-    props,
-    output
-  };
+const defaultProps: IProps = {
+  completedCount: 0,
+  activeCount: 0,
+  filter: TodoFilters.SHOW_ALL,
+  onClearCompleted: jest.fn(),
+  onShow: jest.fn()
 };
 
-const getTextContent = (
-  elem: React.ReactElement<{ children: any }>
-): string => {
-  const children = Array.isArray(elem.props.children)
-    ? elem.props.children
-    : [elem.props.children];
+it("should render container with class footer", () => {
+  const footer = shallow(<Footer {...defaultProps} />);
+  expect(footer.type()).toBe("footer");
+  expect(footer.hasClass("footer")).toBe(true);
+});
 
-  return children.reduce(
-    (
-      out: string,
-      child // Concatenate the text
-    ) =>
-      // Children are either elements or text strings
-      out + (child.props ? getTextContent(child) : child),
-    ""
-  );
-};
+it("should display active count when 0", () => {
+  const footer = shallow(<Footer {...defaultProps} activeCount={0} />);
+  expect(footer.find(".todo-count").text()).toContain("No items left");
+});
 
-describe("components", () => {
-  describe("Footer", () => {
-    it("should render container", () => {
-      const { output } = setup();
-      expect(output.type).toBe("footer");
-      expect(output.props.className).toBe("footer");
-    });
+it("should display active count when above 0", () => {
+  const footer = shallow(<Footer {...defaultProps} activeCount={1} />);
+  expect(footer.find(".todo-count").text()).toContain("1 item left");
+});
 
-    it("should display active count when 0", () => {
-      const { output } = setup({ activeCount: 0 });
-      const [count] = output.props.children;
-      expect(getTextContent(count)).toBe("No items left");
-    });
+it("should render filters", () => {
+  const footer = shallow(<Footer {...defaultProps} />);
+  const filterList = footer.find("ul");
+  expect(filterList.hasClass("filters")).toBe(true);
 
-    it("should display active count when above 0", () => {
-      const { output } = setup({ activeCount: 1 });
-      const [count] = output.props.children;
-      expect(getTextContent(count)).toBe("1 item left");
-    });
+  const filters = filterList.children();
+  expect(filters).toHaveLength(3);
+  expect(filters.find(".selected")).toHaveLength(1);
+  expect(filters.every("li")).toBe(true);
 
-    it("should render filters", () => {
-      const { output } = setup();
-      const filters = output.props.children[1];
-      expect(filters.type).toBe("ul");
-      expect(filters.props.className).toBe("filters");
-      expect(filters.props.children.length).toBe(3);
-      filters.props.children.forEach((filter: any, i: number) => {
-        // TODO: find out the type of filteer
-        expect(filter.type).toBe("li");
-        const a = filter.props.children;
-        expect(a.props.className).toBe(i === 0 ? "selected" : "");
-        expect(a.props.children).toBe(["All", "Active", "Completed"][i]);
-      });
-    });
+  const filtersText = filters.map(filter => filter.text());
+  expect(
+    filtersText.every(value => Object.values(FILTER_TITLES).includes(value))
+  ).toBe(true);
+});
 
-    it("should call onShow when a filter is clicked", () => {
-      const { output, props } = setup();
-      const filters = output.props.children[1];
-      const filterLink = filters.props.children[1].props.children;
-      filterLink.props.onClick({});
-      expect(props.onShow).toBeCalledWith(TodoFilters.SHOW_ACTIVE);
-    });
+it("should call onShow when a filter is clicked", () => {
+  const expectedFilter = TodoFilters.SHOW_ACTIVE;
+  const footer = shallow(<Footer {...defaultProps} />);
+  const link = footer
+    .find("ul.filters li a")
+    .filterWhere(filter => filter.text() === FILTER_TITLES[expectedFilter])
+    .first();
+  link.simulate("click");
+  expect(defaultProps.onShow).toBeCalledWith(expectedFilter);
+});
 
-    it("shouldnt show clear button when no completed todos", () => {
-      const { output } = setup({ completedCount: 0 });
-      const clear = output.props.children[2];
-      expect(clear).toBe(undefined);
-    });
+it("shouldnt show clear button when no completed todos", () => {
+  const footer = shallow(<Footer {...defaultProps} completedCount={0} />);
+  const clear = footer.find("button");
+  expect(clear.exists()).toBe(false);
+});
 
-    it("should render clear button when completed todos", () => {
-      const { output } = setup({ completedCount: 1 });
-      const clear = output.props.children[2];
-      expect(clear.type).toBe("button");
-      expect(clear.props.children).toBe("Clear completed");
-    });
+it("should render clear button when completed todos", () => {
+  const footer = shallow(<Footer {...defaultProps} completedCount={1} />);
+  const clear = footer.find("button");
+  expect(clear.exists()).toBe(true);
+  expect(clear.hasClass("clear-completed")).toBe(true);
+});
 
-    it("should call onClearCompleted on clear button click", () => {
-      const { output, props } = setup({ completedCount: 1 });
-      const clear = output.props.children[2];
-      clear.props.onClick({});
-      expect(props.onClearCompleted).toBeCalled();
-    });
-  });
+it("should call onClearCompleted on clear button click", () => {
+  const footer = shallow(<Footer {...defaultProps} completedCount={1} />);
+  const clear = footer.find("button.clear-completed");
+  clear.simulate("click");
+  expect(defaultProps.onClearCompleted).toBeCalled();
 });

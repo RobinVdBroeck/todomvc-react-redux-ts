@@ -2,7 +2,7 @@ import * as classnames from "classnames";
 import * as React from "react";
 import { TodoFilters } from "../constants/TodoFilters";
 
-const FILTER_TITLES = {
+export const FILTER_TITLES = {
   [TodoFilters.SHOW_ALL]: "All",
   [TodoFilters.SHOW_ACTIVE]: "Active",
   [TodoFilters.SHOW_COMPLETED]: "Completed"
