@@ -2,10 +2,10 @@ import React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
 import { TodoFilters } from "../constants/TodoFilters";
 import { Footer } from "./Footer";
-import MainSection from "./MainSection";
+import { IProps, MainSection } from "./MainSection";
 import { TodoItem } from "./TodoItem";
 
-const setup = propOverrides => {
+const setup = (propOverrides: Partial<IProps> = {}) => {
   const props = {
     todos: [
       {
@@ -100,7 +100,7 @@ describe("components", () => {
 
       it("onClearCompleted should call clearCompleted", () => {
         const { output, props } = setup();
-        const [, , footer] = output.props.children;
+        const footer = output.props.children[2];
         footer.props.onClearCompleted();
         expect(props.actions.clearCompleted).toBeCalled();
       });
@@ -109,7 +109,7 @@ describe("components", () => {
     describe("todo list", () => {
       it("should render", () => {
         const { output, props } = setup();
-        const [, list] = output.props.children;
+        const list = output.props.children[1];
         expect(list.type).toBe("ul");
         expect(list.props.children.length).toBe(2);
         list.props.children.forEach((item, i) => {
@@ -120,7 +120,7 @@ describe("components", () => {
 
       it("should filter items", () => {
         const { output, renderer, props } = setup();
-        const [, , footer] = output.props.children;
+        const footer = output.props.children[2];
         footer.props.onShow(TodoFilters.SHOW_COMPLETED);
         const updated = renderer.getRenderOutput();
         const [, updatedList] = updated.props.children;
