@@ -13,6 +13,7 @@
     "@types/react-redux": "^4.4.46",
     "@types/webpack": "^3.0.4",
     "classnames": "^2.2.5",
+    "css-loader": "^0.28.4",
     "enzyme": "^2.9.1",
     "html-webpack-plugin": "^2.29.0",
     "husky": "^0.14.3",
@@ -29,6 +30,7 @@
     "react-redux": "^5.0.5",
     "react-test-renderer": "^15.6.1",
     "redux": "^3.7.1",
+    "style-loader": "^0.18.2",
     "todomvc-app-css": "^2.1.0",
     "ts-jest": "^20.0.7",
     "ts-loader": "^2.2.2",
@@ -49,16 +51,32 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,json}": ["prettier --write", "git add"],
-    "*.{ts,tsx}": ["prettier --write", "tslint --fix", "git add"]
+    "*.{js,jsx,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ]
   },
   "jest": {
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/build/"],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/build/"
+    ],
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json", "jsx"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json",
+      "jsx"
+    ],
     "collectCoverage": true,
     "mapCoverage": true
   },
