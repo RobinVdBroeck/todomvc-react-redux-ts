@@ -7,7 +7,6 @@
   "devDependencies": {
     "@types/classnames": "^2.2.0",
     "@types/jest": "^20.0.2",
-    "@types/prop-types": "^15.5.1",
     "@types/react": "^15.0.37",
     "@types/react-dom": "^15.5.1",
     "@types/react-redux": "^4.4.46",
@@ -58,7 +57,7 @@
     },
     "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/build/"],
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json", "jsx"],
+    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
     "collectCoverage": true,
     "mapCoverage": true
   },

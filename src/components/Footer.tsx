@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import * as classnames from "classnames";
 import * as React from "react";
 import { TodoFilters } from "../constants/TodoFilters";
 
@@ -51,7 +51,6 @@ export class Footer extends React.Component<IProps, {}> {
   private renderFilterLink(filter: TodoFilters) {
     const title = FILTER_TITLES[filter];
     const { filter: selectedFilter, onShow } = this.props;
-
     return (
       <a
         className={classnames({

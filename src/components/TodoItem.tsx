@@ -1,5 +1,4 @@
-import classnames from "classnames";
-import PropTypes from "prop-types";
+import * as classnames from "classnames";
 import * as React from "react";
 import { ITodo } from "../interfaces/ITodo";
 import { TodoTextInput } from "./TodoTextInput";
