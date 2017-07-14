@@ -1,3 +1,4 @@
+import { Actions } from "../actions/index";
 import { ActionTypes } from "../constants/ActionTypes";
 
 const initialState = [
@@ -8,7 +9,7 @@ const initialState = [
   }
 ];
 
-export default function todos(state = initialState, action) {
+export function todos(state = initialState, action: Actions) {
   switch (action.type) {
     case ActionTypes.ADD_TODO:
       return [
