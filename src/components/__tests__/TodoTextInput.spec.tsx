@@ -39,36 +39,34 @@ it("should render correctly when newTodo=true", () => {
 it("should update value on change", () => {
   const todoTextInput = shallow(<TodoTextInput {...defaultProps} />);
   todoTextInput.simulate("change", {
-    target: { value: "Use Radox" }
+    currentTarget: { value: "Use Radox" }
   });
-  expect(todoTextInput.props().value).toEqual("Use Radox");
+  expect(todoTextInput.state().text).toEqual("Use Radox");
 });
 
 it("should call onSave on return key press", () => {
   const todoTextInput = shallow(<TodoTextInput {...defaultProps} />);
   todoTextInput.simulate("keydown", {
     which: 13,
-    target: { value: "Use Redux" }
+    currentTarget: { value: "Use Redux" }
   });
   expect(defaultProps.onSave).toBeCalledWith("Use Redux");
 });
 
 it("should reset state on return key press if newTodo", () => {
-  const todoTextInput = shallow(
+  const todoTextInput = mount(
     <TodoTextInput {...defaultProps} newTodo={true} />
   );
   todoTextInput.simulate("keydown", {
     which: 13,
-    target: { value: "Use Redux" }
+    currentTarget: { value: "Use Redux" }
   });
-  expect(todoTextInput.props().value).toEqual("");
+  expect(todoTextInput.state().text).toEqual("");
 });
 
 it("should call onSave on blur", () => {
-  const todoTextInput = shallow(<TodoTextInput {...defaultProps} />);
-  todoTextInput.simulate("blur", {
-    target: { value: "Use Redux" }
-  });
+  const todoTextInput = mount(<TodoTextInput {...defaultProps} />);
+  todoTextInput.simulate("blur", { currentTarget: { value: "Use Redux" } });
   expect(defaultProps.onSave).toBeCalledWith("Use Redux");
 });
 
@@ -76,8 +74,6 @@ it("shouldnt call onSave on blur if newTodo", () => {
   const todoTextInput = shallow(
     <TodoTextInput {...defaultProps} newTodo={true} />
   );
-  todoTextInput.simulate("blur", {
-    target: { value: "Use Redux" }
-  });
+  todoTextInput.simulate("blur", { currentTarget: { value: "Use Redux" } });
   expect(defaultProps.onSave).not.toBeCalled();
 });

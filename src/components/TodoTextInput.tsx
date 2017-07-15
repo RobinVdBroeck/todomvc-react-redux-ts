@@ -41,8 +41,8 @@ export class TodoTextInput extends React.Component<IProps, IState> {
     );
   }
 
-  private handleSubmit = e => {
-    const text = e.target.value.trim();
+  private handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const text = e.currentTarget.value.trim();
     if (e.which === 13) {
       this.props.onSave(text);
       if (this.props.newTodo) {
@@ -51,13 +51,13 @@ export class TodoTextInput extends React.Component<IProps, IState> {
     }
   };
 
-  private handleChange = e => {
-    this.setState({ text: e.target.value });
+  private handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    this.setState({ text: e.currentTarget.value });
   };
 
-  private handleBlur = e => {
+  private handleBlur = (e: React.FormEvent<HTMLInputElement>) => {
     if (!this.props.newTodo) {
-      this.props.onSave(e.target.value);
+      this.props.onSave(e.currentTarget.value);
     }
   };
 }
