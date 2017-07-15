@@ -49,6 +49,9 @@ export class Footer extends React.Component<IProps, {}> {
   }
 
   private renderFilterLink(filter: TodoFilters) {
+    function onClick() {
+      onShow(filter);
+    }
     const title = FILTER_TITLES[filter];
     const { filter: selectedFilter, onShow } = this.props;
     return (
@@ -57,7 +60,7 @@ export class Footer extends React.Component<IProps, {}> {
           selected: filter === selectedFilter
         })}
         style={{ cursor: "pointer" }}
-        onClick={() => onShow(filter)}
+        onClick={onClick}
       >
         {title}
       </a>

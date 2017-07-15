@@ -15,13 +15,15 @@ interface IState {
 }
 
 export class TodoItem extends React.Component<IProps, IState> {
+  private readonly handleSave = this.handleSaveFactory(this.props.todo.id);
+
   constructor(props: IProps) {
     super(props);
     this.state = { editing: false };
   }
 
   public render() {
-    const { todo, completeTodo, deleteTodo } = this.props;
+    const { todo } = this.props;
 
     let element;
     if (this.state.editing) {
@@ -29,7 +31,7 @@ export class TodoItem extends React.Component<IProps, IState> {
         <TodoTextInput
           text={todo.text}
           editing={this.state.editing}
-          onSave={text => this.handleSave(todo.id, text)}
+          onSave={this.handleSave}
         />
       );
     } else {
@@ -39,12 +41,12 @@ export class TodoItem extends React.Component<IProps, IState> {
             className="toggle"
             type="checkbox"
             checked={todo.completed}
-            onChange={() => completeTodo(todo.id)}
+            onChange={this.onChange}
           />
           <label onDoubleClick={this.handleDoubleClick}>
             {todo.text}
           </label>
-          <button className="destroy" onClick={() => deleteTodo(todo.id)} />
+          <button className="destroy" onClick={this.onClick} />
         </div>
       );
     }
@@ -65,12 +67,17 @@ export class TodoItem extends React.Component<IProps, IState> {
     this.setState({ editing: true });
   };
 
-  private handleSave = (id: number, text: string) => {
-    if (text.length === 0) {
-      this.props.deleteTodo(id);
-    } else {
-      this.props.editTodo(id, text);
-    }
-    this.setState({ editing: false });
-  };
+  private onChange = () => this.props.completeTodo(this.props.todo.id);
+  private onClick = () => this.props.deleteTodo(this.props.todo.id);
+
+  private handleSaveFactory(id: number) {
+    return (text: string) => {
+      if (text.length === 0) {
+        this.props.deleteTodo(id);
+      } else {
+        this.props.editTodo(id, text);
+      }
+      this.setState({ editing: false });
+    };
+  }
 }
