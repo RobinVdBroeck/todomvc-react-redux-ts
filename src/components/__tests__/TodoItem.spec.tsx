@@ -27,26 +27,27 @@ const test = setup(
   ({ sandbox }) => sandbox.reset()
 );
 
-test("initial render", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
-  expect(todoItem.type()).toBe("li");
-  expect(todoItem.props().className).toBe("");
+test("initial render", t => {
+  const todoItem = shallow(<TodoItem {...t.context.defaultProps} />);
+
+  t.is(todoItem.type(), "li");
+  t.true(todoItem.hasClass(""));
 
   const div = todoItem.childAt(0);
-  expect(div.type()).toBe("div");
-  expect(div.hasClass("view")).toBe(true);
+  t.is(div.type(), "div");
+  t.true(div.hasClass("view"));
 
   const input = div.childAt(0);
-  expect(input.type()).toBe("input");
-  expect(input.props().checked).toBe(false);
+  t.is(input.type(), "input");
+  t.false(input.props().checked);
 
   const label = div.childAt(1);
-  expect(label.type()).toBe("label");
-  expect(label.text()).toBe("Use Redux");
+  t.is(label.type(), "label");
+  t.is(label.text(), "Use Redux");
 
   const button = div.childAt(2);
-  expect(button.type()).toBe("button");
-  expect(button.hasClass("destroy")).toBe(true);
+  t.is(button.type(), "button");
+  t.true(button.hasClass("destroy"));
 });
 
 test("input onChange should call completeTodo", t => {
