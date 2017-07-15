@@ -3,7 +3,7 @@ import * as ava from "ava";
 // T is type of the context
 export function setup<T = {}>(
   setupContext?: () => T,
-  afterEach?: (t: ava.GenericTestContext<ava.Context<T>>) => void
+  afterEach?: (t: T) => void
 ): ava.RegisterContextual<T> {
   if (typeof setupContext !== "undefined") {
     ava.test.beforeEach(t => {
@@ -11,7 +11,9 @@ export function setup<T = {}>(
     });
   }
   if (typeof afterEach !== "undefined") {
-    ava.test.afterEach.always(afterEach);
+    ava.test.afterEach.always(t => {
+      afterEach(t.context);
+    });
   }
 
   return ava.test;

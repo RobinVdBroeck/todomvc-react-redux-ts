@@ -1,6 +1,5 @@
 import { shallow } from "enzyme";
 import * as React from "react";
-import { createRenderer } from "react-test-renderer/shallow";
 import * as sinon from "sinon";
 import { TodoFilters } from "../../constants/TodoFilters";
 import { setup } from "../../utils/test";
@@ -18,8 +17,8 @@ const test = setup(
     };
     return { sandbox, defaultProps };
   },
-  t => {
-    t.context.sandbox.restore();
+  ({ sandbox }) => {
+    sandbox.restore();
   }
 );
 

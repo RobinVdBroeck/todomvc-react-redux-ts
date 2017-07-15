@@ -1,38 +1,49 @@
 import { shallow } from "enzyme";
 import * as React from "react";
+import * as sinon from "sinon";
+import { setup } from "../../utils/test";
 import { Header, IProps } from "../Header";
 import { IProps as ITodoTextInputProps, TodoTextInput } from "../TodoTextInput";
 
-const defaultProps: IProps = {
-  addTodo: jest.fn()
-};
+const test = setup(
+  () => {
+    const sandbox = sinon.sandbox.create();
+    const defaultProps = {
+      addTodo: sandbox.spy()
+    };
+    return {
+      sandbox,
+      defaultProps
+    };
+  },
+  ({ sandbox }) => {
+    sandbox.restore();
+  }
+);
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
+test("should render correctly", t => {
+  const header = shallow(<Header {...t.context.defaultProps} />);
 
-it("should render correctly", () => {
-  const header = shallow(<Header {...defaultProps} />);
-
-  expect(header.type()).toBe("header");
-  expect(header.hasClass("header")).toBe(true);
+  t.is(header.type(), "header");
+  t.true(header.hasClass("header"));
 
   const h1 = header.children().at(0);
-  expect(h1.type()).toBe("h1");
-  expect(h1.text()).toBe("todos");
+  t.is(h1.type(), "h1");
+  t.is(h1.text(), "todos");
 
   const input = header.children().at(1);
-  expect(input.type()).toBe(TodoTextInput);
-  expect(input.props().newTodo).toBe(true);
-  expect(input.props().placeholder).toBe("What needs to be done?");
+  t.is(input.type(), TodoTextInput);
+  t.true(input.props().newTodo);
+  t.is(input.props().placeholder, "What needs to be done?");
 });
 
-it("should call addTodo if length of text is greater than 0", () => {
+test("should call addTodo if length of text is greater than 0", t => {
+  const { defaultProps } = t.context;
   const header = shallow(<Header {...defaultProps} />);
 
   const input = header.children().at(1);
   input.props().onSave("");
-  expect(defaultProps.addTodo).not.toBeCalled();
+  t.true(defaultProps.addTodo.notCalled);
   input.props().onSave("Use Redux");
-  expect(defaultProps.addTodo).toBeCalled();
+  t.true(defaultProps.addTodo.called);
 });

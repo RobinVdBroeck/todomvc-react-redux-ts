@@ -57,15 +57,8 @@
     "lint": "tslint src/**/*.ts src/**/*.tsx -c tslint.json --project tsconfig.json"
   },
   "lint-staged": {
-    "*.{js,jsx,json}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.{ts,tsx}": [
-      "prettier --write",
-      "tslint --fix",
-      "git add"
-    ]
+    "*.{js,jsx,json}": ["prettier --write", "git add"],
+    "*.{ts,tsx}": ["prettier --write", "tslint --fix", "git add"]
   },
   "dependencies": {}
 }
