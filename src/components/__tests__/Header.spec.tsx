@@ -16,9 +16,7 @@ const test = setup(
       defaultProps
     };
   },
-  ({ sandbox }) => {
-    sandbox.restore();
-  }
+  ({ sandbox }) => sandbox.restore()
 );
 
 test("should render correctly", t => {
