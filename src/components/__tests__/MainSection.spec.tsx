@@ -95,7 +95,7 @@ test("footer", () => {
 
   test("onClearCompleted should call clearCompleted", t => {
     const { defaultProps } = t.context;
-    const mainSection = shallow(<MainSection {...deafaultProps} />);
+    const mainSection = shallow(<MainSection {...defaultProps} />);
 
     const footer = mainSection.childAt(2);
     footer.simulate("clearCompleted");
