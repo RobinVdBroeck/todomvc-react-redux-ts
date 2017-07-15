@@ -11,6 +11,7 @@
     "@types/react": "^15.0.37",
     "@types/react-dom": "^15.5.1",
     "@types/react-redux": "^4.4.46",
+    "@types/react-test-renderer": "^15.5.1",
     "@types/webpack": "^3.0.4",
     "classnames": "^2.2.5",
     "css-loader": "^0.28.4",
@@ -50,16 +51,31 @@
     "lint": "tslint src/**/*.ts src/**/*.tsx -c tslint.json --project tsconfig.json --type-check"
   },
   "lint-staged": {
-    "*.{js,jsx,json}": ["prettier --write", "git add"],
-    "*.{ts,tsx}": ["prettier --write", "tslint --fix", "git add"]
+    "*.{js,jsx,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ]
   },
   "jest": {
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/build/"],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/build/"
+    ],
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
     "collectCoverage": true,
     "mapCoverage": true
   }
