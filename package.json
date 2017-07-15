@@ -7,18 +7,19 @@
   "devDependencies": {
     "@types/classnames": "^2.2.0",
     "@types/enzyme": "^2.8.2",
-    "@types/jest": "^20.0.2",
     "@types/react": "^15.0.37",
     "@types/react-dom": "^15.5.1",
     "@types/react-redux": "^4.4.46",
     "@types/react-test-renderer": "^15.5.1",
+    "@types/sinon": "^2.3.2",
+    "@types/tape": "^4.2.30",
     "@types/webpack": "^3.0.4",
+    "ava": "^0.21.0",
     "classnames": "^2.2.5",
     "css-loader": "^0.28.4",
     "enzyme": "^2.9.1",
     "html-webpack-plugin": "^2.29.0",
     "husky": "^0.14.3",
-    "jest": "^20.0.4",
     "lint-staged": "^4.0.1",
     "pre-commit": "^1.2.2",
     "prettier": "^1.5.2",
@@ -28,11 +29,14 @@
     "react-redux": "^5.0.5",
     "react-test-renderer": "^15.6.1",
     "redux": "^3.7.1",
+    "rimraf": "^2.6.1",
+    "sinon": "^2.3.8",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
+    "tape": "^4.7.0",
     "todomvc-app-css": "^2.1.0",
-    "ts-jest": "^20.0.7",
     "ts-loader": "^2.2.2",
+    "ts-node": "^3.2.0",
     "tslint": "^5.5.0",
     "tslint-config-prettier": "^1.1.0",
     "tslint-eslint-rules": "^4.1.1",
@@ -43,40 +47,18 @@
     "webpack-dev-server": "^2.5.1"
   },
   "scripts": {
-    "test": "jest",
+    "pretest": "npm run build",
+    "test": "ava",
     "build": "tsc",
     "bundle": "webpack -p",
     "start": "webpack-dev-server --open",
+    "clean": "rimraf build/ dist/ node_modules/",
     "precommit": "lint-staged",
-    "lint": "tslint src/**/*.ts src/**/*.tsx -c tslint.json --project tsconfig.json --type-check"
+    "lint": "tslint src/**/*.ts src/**/*.tsx -c tslint.json --project tsconfig.json"
   },
   "lint-staged": {
-    "*.{js,jsx,json}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.{ts,tsx}": [
-      "prettier --write",
-      "tslint --fix",
-      "git add"
-    ]
+    "*.{js,jsx,json}": ["prettier --write", "git add"],
+    "*.{ts,tsx}": ["prettier --write", "tslint --fix", "git add"]
   },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-    },
-    "testPathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "<rootDir>/build/"
-    ],
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ],
-    "collectCoverage": true,
-    "mapCoverage": true
-  }
+  "dependencies": {}
 }
