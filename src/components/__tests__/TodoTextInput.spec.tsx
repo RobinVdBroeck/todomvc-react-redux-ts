@@ -1,4 +1,4 @@
-import { mount, shallow } from "enzyme";
+import { shallow } from "enzyme";
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
 import * as sinon from "sinon";
@@ -61,7 +61,7 @@ test("should call onSave on return key press", t => {
 });
 
 test("should reset state on return key press if newTodo", t => {
-  const todoTextInput = mount(
+  const todoTextInput = shallow(
     <TodoTextInput {...t.context.defaultProps} newTodo={true} />
   );
   todoTextInput.simulate("keydown", {
@@ -73,7 +73,7 @@ test("should reset state on return key press if newTodo", t => {
 
 test("should call onSave on blur", t => {
   const { defaultProps } = t.context;
-  const todoTextInput = mount(<TodoTextInput {...defaultProps} />);
+  const todoTextInput = shallow(<TodoTextInput {...defaultProps} />);
   todoTextInput.simulate("blur", { currentTarget: { value: "Use Redux" } });
   t.true(defaultProps.onSave.calledWith("Use Redux"));
 });

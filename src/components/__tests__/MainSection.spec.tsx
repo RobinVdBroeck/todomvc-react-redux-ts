@@ -1,4 +1,4 @@
-import { CommonWrapper, mount, shallow } from "enzyme";
+import { CommonWrapper, shallow } from "enzyme";
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
 import * as sinon from "sinon";
@@ -72,64 +72,63 @@ test("toggle all input should call completeAll on change", t => {
   t.true(defaultProps.actions.completeAll.called);
 });
 
-test("footer", () => {
-  test("should render", t => {
-    const { defaultProps } = t.context;
-    const mainSection = shallow(<MainSection {...defaultProps} />);
+test("footer should render", t => {
+  const { defaultProps } = t.context;
+  const mainSection = shallow(<MainSection {...defaultProps} />);
 
-    const footer = mainSection.childAt(2);
-    t.is(footer.type(), Footer);
-    t.is(footer.props().completedCount, 1);
-    t.is(footer.props().activeCount, 1);
-    t.is(footer.props().filter, TodoFilters.SHOW_ALL);
-  });
-
-  test("onShow should set the filter", t => {
-    const mainSection = shallow(<MainSection {...t.context.defaultProps} />);
-
-    const footer = mainSection.childAt(2);
-    t.is(footer.props().filter, TodoFilters.SHOW_ALL);
-    footer.simulate("show", TodoFilters.SHOW_COMPLETED);
-    t.is(footer.props().filter, TodoFilters.SHOW_COMPLETED);
-  });
-
-  test("onClearCompleted should call clearCompleted", t => {
-    const { defaultProps } = t.context;
-    const mainSection = shallow(<MainSection {...defaultProps} />);
-
-    const footer = mainSection.childAt(2);
-    footer.simulate("clearCompleted");
-    t.true(defaultProps.actions.clearCompleted.called);
-  });
+  const footer = mainSection.childAt(2);
+  t.is(footer.type(), Footer);
+  t.is(footer.props().completedCount, 1);
+  t.is(footer.props().activeCount, 1);
+  t.is(footer.props().filter, TodoFilters.SHOW_ALL);
 });
 
-test("todo list", () => {
-  const todoItemToTodoString = (item: CommonWrapper<ITodoItemProps, any>) =>
-    item.props().todo;
+test("footer onShow should set the filter", t => {
+  const mainSection = shallow(<MainSection {...t.context.defaultProps} />);
 
-  test("should render", t => {
-    const { defaultProps } = t.context;
-    const mainSection = shallow(<MainSection {...defaultProps} />);
+  const footer = mainSection.childAt(2);
+  t.is(footer.props().filter, TodoFilters.SHOW_ALL);
 
-    const list = mainSection.childAt(1);
-    t.is(list.type(), "ul");
+  footer.props().onShow(TodoFilters.SHOW_COMPLETED);
+  mainSection.update(); // Update it because the footer is rerendered
+  const updatedFooter = mainSection.childAt(2);
+  t.is(updatedFooter.props().filter, TodoFilters.SHOW_COMPLETED);
+});
 
-    const todos = list.children();
-    t.is(todos.length, 2);
-    t.true(todos.everyWhere(todo => todo.type() === TodoItem));
-    t.is(todos.map(todoItemToTodoString), defaultProps.todos);
-  });
+test("footer onClearCompleted should call clearCompleted", t => {
+  const { defaultProps } = t.context;
+  const mainSection = shallow(<MainSection {...defaultProps} />);
 
-  test("should filter items", t => {
-    const { defaultProps } = t.context;
-    const mainSection = shallow(<MainSection {...defaultProps} />);
+  const footer = mainSection.childAt(2);
+  footer.simulate("clearCompleted");
+  t.true(defaultProps.actions.clearCompleted.called);
+});
 
-    const footer = mainSection.childAt(2);
-    footer.simulate("show", TodoFilters.SHOW_COMPLETED);
+const todoItemToTodoString = (item: CommonWrapper<ITodoItemProps, any>) =>
+  item.props().todo;
 
-    const list = mainSection.childAt(1);
-    t.is(list.children().length, 1);
-    const expectedTodos = defaultProps.todos.filter(todo => todo.completed);
-    t.is(list.children().map(todoItemToTodoString), expectedTodos);
-  });
+test("todo list should render", t => {
+  const { defaultProps } = t.context;
+  const mainSection = shallow(<MainSection {...defaultProps} />);
+
+  const list = mainSection.childAt(1);
+  t.is(list.type(), "ul");
+
+  const todos = list.children();
+  t.is(todos.length, 2);
+  t.true(todos.everyWhere(todo => todo.type() === TodoItem));
+  t.deepEqual(todos.map(todoItemToTodoString), defaultProps.todos);
+});
+
+test("todo list should filter items", t => {
+  const { defaultProps } = t.context;
+  const mainSection = shallow(<MainSection {...defaultProps} />);
+
+  const footer = mainSection.childAt(2);
+  footer.simulate("show", TodoFilters.SHOW_COMPLETED);
+
+  const list = mainSection.childAt(1);
+  t.is(list.children().length, 1);
+  const expectedTodos = defaultProps.todos.filter(todo => todo.completed);
+  t.deepEqual(list.children().map(todoItemToTodoString), expectedTodos);
 });
