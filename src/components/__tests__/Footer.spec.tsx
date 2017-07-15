@@ -1,80 +1,96 @@
 import { shallow } from "enzyme";
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
+import * as sinon from "sinon";
 import { TodoFilters } from "../../constants/TodoFilters";
+import { setup } from "../../utils/test";
 import { FILTER_TITLES, Footer, IProps } from "../Footer";
 
-const defaultProps: IProps = {
-  completedCount: 0,
-  activeCount: 0,
-  filter: TodoFilters.SHOW_ALL,
-  onClearCompleted: jest.fn(),
-  onShow: jest.fn()
-};
+const test = setup(
+  () => {
+    const sandbox = sinon.sandbox.create();
+    const defaultProps = {
+      completedCount: 0,
+      activeCount: 0,
+      filter: TodoFilters.SHOW_ALL,
+      onClearCompleted: sandbox.spy(),
+      onShow: sandbox.spy()
+    };
+    return { sandbox, defaultProps };
+  },
+  t => {
+    t.context.sandbox.restore();
+  }
+);
 
-beforeEach(() => {
-  jest.clearAllMocks();
+test("should render container with class footer", t => {
+  const footer = shallow(<Footer {...t.context.defaultProps} />);
+  t.true(footer.hasClass("footer"));
 });
 
-it("should render container with class footer", () => {
-  const footer = shallow(<Footer {...defaultProps} />);
-  expect(footer.type()).toBe("footer");
-  expect(footer.hasClass("footer")).toBe(true);
+test("should display active count when 0", t => {
+  const footer = shallow(
+    <Footer {...t.context.defaultProps} activeCount={0} />
+  );
+  t.true(footer.find(".todo-count").text().includes("No items left"));
 });
 
-it("should display active count when 0", () => {
-  const footer = shallow(<Footer {...defaultProps} activeCount={0} />);
-  expect(footer.find(".todo-count").text()).toContain("No items left");
+test("should display active count when above 0", t => {
+  const footer = shallow(
+    <Footer {...t.context.defaultProps} activeCount={1} />
+  );
+  t.true(footer.find(".todo-count").text().includes("1 item left"));
 });
 
-it("should display active count when above 0", () => {
-  const footer = shallow(<Footer {...defaultProps} activeCount={1} />);
-  expect(footer.find(".todo-count").text()).toContain("1 item left");
-});
-
-it("should render filters", () => {
-  const footer = shallow(<Footer {...defaultProps} />);
+test("should render filters", t => {
+  const footer = shallow(<Footer {...t.context.defaultProps} />);
   const filterList = footer.find("ul");
-  expect(filterList.hasClass("filters")).toBe(true);
+  t.true(filterList.hasClass("filters"));
 
   const filters = filterList.children();
-  expect(filters).toHaveLength(3);
-  expect(filters.find(".selected")).toHaveLength(1);
-  expect(filters.every("li")).toBe(true);
+  t.is(filters.length, 3);
+  t.is(filters.find(".selected").length, 1);
+  t.true(filters.every("li"));
 
   const filtersText = filters.map(filter => filter.text());
-  expect(
+  t.true(
     filtersText.every(value => Object.values(FILTER_TITLES).includes(value))
-  ).toBe(true);
+  );
 });
 
-it("should call onShow when a filter is clicked", () => {
+test("should call onShow when a filter is clicked", t => {
   const expectedFilter = TodoFilters.SHOW_ACTIVE;
+  const { defaultProps } = t.context;
   const footer = shallow(<Footer {...defaultProps} />);
   const link = footer
     .find("ul.filters li a")
     .filterWhere(filter => filter.text() === FILTER_TITLES[expectedFilter])
     .first();
   link.simulate("click");
-  expect(defaultProps.onShow).toBeCalledWith(expectedFilter);
+  t.true(defaultProps.onShow.calledWith(expectedFilter));
 });
 
-it("shouldnt show clear button when no completed todos", () => {
-  const footer = shallow(<Footer {...defaultProps} completedCount={0} />);
+test("shouldnt show clear button when no completed todos", t => {
+  const footer = shallow(
+    <Footer {...t.context.defaultProps} completedCount={0} />
+  );
   const clear = footer.find("button");
-  expect(clear.exists()).toBe(false);
+  t.false(clear.exists());
 });
 
-it("should render clear button when completed todos", () => {
-  const footer = shallow(<Footer {...defaultProps} completedCount={1} />);
+test("should render clear button when completed todos", t => {
+  const footer = shallow(
+    <Footer {...t.context.defaultProps} completedCount={1} />
+  );
   const clear = footer.find("button");
-  expect(clear.exists()).toBe(true);
-  expect(clear.hasClass("clear-completed")).toBe(true);
+  t.true(clear.exists());
+  t.true(clear.hasClass("clear-completed"));
 });
 
-it("should call onClearCompleted on clear button click", () => {
+test("should call onClearCompleted on clear button click", t => {
+  const { defaultProps } = t.context;
   const footer = shallow(<Footer {...defaultProps} completedCount={1} />);
   const clear = footer.find("button.clear-completed");
   clear.simulate("click");
-  expect(defaultProps.onClearCompleted).toBeCalled();
+  t.true(defaultProps.onClearCompleted.called);
 });
