@@ -46,7 +46,8 @@
     "build": "tsc",
     "bundle": "webpack -p",
     "start": "webpack-dev-server --open",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "lint": "tslint src/**/*.ts src/**/*.tsx -c tslint.json --project tsconfig.json --type-check"
   },
   "lint-staged": {
     "*.{js,jsx,json}": ["prettier --write", "git add"],
