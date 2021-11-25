@@ -5,19 +5,16 @@ import { setup } from "../../utils/test";
 import { Header, IProps } from "../Header";
 import { IProps as ITodoTextInputProps, TodoTextInput } from "../TodoTextInput";
 
-const test = setup(
-  () => {
-    const sandbox = sinon.sandbox.create();
-    const defaultProps = {
-      addTodo: sandbox.spy(),
-    };
-    return {
-      sandbox,
-      defaultProps,
-    };
-  },
-  ({ sandbox }) => sandbox.restore()
-);
+const test = setup(() => {
+  const sandbox = sinon;
+  const defaultProps = {
+    addTodo: sandbox.spy(),
+  };
+  return {
+    sandbox,
+    defaultProps,
+  };
+});
 
 test("should render correctly", (t) => {
   const header = shallow(<Header {...t.context.defaultProps} />);

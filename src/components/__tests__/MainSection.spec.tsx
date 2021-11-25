@@ -8,37 +8,35 @@ import { Footer } from "../Footer";
 import { IProps, MainSection } from "../MainSection";
 import { IProps as ITodoItemProps, TodoItem } from "../TodoItem";
 
-const test = setup(
-  () => {
-    const sandbox = sinon.sandbox.create();
-    const defaultProps = {
-      todos: [
-        {
-          text: "Use Redux",
-          completed: false,
-          id: 0,
-        },
-        {
-          text: "Run the tests",
-          completed: true,
-          id: 1,
-        },
-      ],
-      actions: {
-        editTodo: sandbox.spy(),
-        deleteTodo: sandbox.spy(),
-        completeTodo: sandbox.spy(),
-        completeAll: sandbox.spy(),
-        clearCompleted: sandbox.spy(),
+const test = setup(() => {
+  const sandbox = sinon;
+
+  const defaultProps = {
+    todos: [
+      {
+        text: "Use Redux",
+        completed: false,
+        id: 0,
       },
-    };
-    return {
-      sandbox,
-      defaultProps,
-    };
-  },
-  ({ sandbox }) => sandbox.restore()
-);
+      {
+        text: "Run the tests",
+        completed: true,
+        id: 1,
+      },
+    ],
+    actions: {
+      editTodo: sandbox.spy(),
+      deleteTodo: sandbox.spy(),
+      completeTodo: sandbox.spy(),
+      completeAll: sandbox.spy(),
+      clearCompleted: sandbox.spy(),
+    },
+  };
+  return {
+    sandbox,
+    defaultProps,
+  };
+});
 
 test("should render container", (t) => {
   const mainSection = shallow(<MainSection {...t.context.defaultProps} />);

@@ -5,20 +5,17 @@ import * as sinon from "sinon";
 import { setup } from "../../utils/test";
 import { IProps, IState, TodoTextInput } from "../TodoTextInput";
 
-const test = setup(
-  () => {
-    const sandbox = sinon.sandbox.create();
-    const defaultProps = {
-      onSave: sandbox.spy(),
-      text: "Use Redux",
-      placeholder: "What needs to be done?",
-      editing: false,
-      newTodo: false,
-    };
-    return { sandbox, defaultProps };
-  },
-  ({ sandbox }) => sandbox.restore()
-);
+const test = setup(() => {
+  const sandbox = sinon;
+  const defaultProps = {
+    onSave: sandbox.spy(),
+    text: "Use Redux",
+    placeholder: "What needs to be done?",
+    editing: false,
+    newTodo: false,
+  };
+  return { sandbox, defaultProps };
+});
 
 test("should render correctly", (t) => {
   const todoTextInput = shallow(<TodoTextInput {...t.context.defaultProps} />);

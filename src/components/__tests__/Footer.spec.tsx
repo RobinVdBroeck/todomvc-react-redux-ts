@@ -5,22 +5,17 @@ import { TodoFilters } from "../../constants/TodoFilters";
 import { setup } from "../../utils/test";
 import { FILTER_TITLES, Footer, IProps } from "../Footer";
 
-const test = setup(
-  () => {
-    const sandbox = sinon.sandbox.create();
-    const defaultProps = {
-      completedCount: 0,
-      activeCount: 0,
-      filter: TodoFilters.SHOW_ALL,
-      onClearCompleted: sandbox.spy(),
-      onShow: sandbox.spy(),
-    };
-    return { sandbox, defaultProps };
-  },
-  ({ sandbox }) => {
-    sandbox.restore();
-  }
-);
+const test = setup(() => {
+  const sandbox = sinon;
+  const defaultProps = {
+    completedCount: 0,
+    activeCount: 0,
+    filter: TodoFilters.SHOW_ALL,
+    onClearCompleted: sandbox.spy(),
+    onShow: sandbox.spy(),
+  };
+  return { sandbox, defaultProps };
+});
 
 test("should render container with class footer", (t) => {
   const footer = shallow(<Footer {...t.context.defaultProps} />);

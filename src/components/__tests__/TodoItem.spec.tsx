@@ -6,26 +6,23 @@ import { setup } from "../../utils/test";
 import { IProps, TodoItem } from "../TodoItem";
 import { TodoTextInput } from "../TodoTextInput";
 
-const test = setup(
-  () => {
-    const sandbox = sinon.sandbox.create();
-    const defaultProps = {
-      todo: {
-        id: 0,
-        text: "Use Redux",
-        completed: false,
-      },
-      editTodo: sandbox.spy(),
-      deleteTodo: sandbox.spy(),
-      completeTodo: sandbox.spy(),
-    };
-    return {
-      sandbox,
-      defaultProps,
-    };
-  },
-  ({ sandbox }) => sandbox.reset()
-);
+const test = setup(() => {
+  const sandbox = sinon;
+  const defaultProps = {
+    todo: {
+      id: 0,
+      text: "Use Redux",
+      completed: false,
+    },
+    editTodo: sandbox.spy(),
+    deleteTodo: sandbox.spy(),
+    completeTodo: sandbox.spy(),
+  };
+  return {
+    sandbox,
+    defaultProps,
+  };
+});
 
 test("initial render", (t) => {
   const todoItem = shallow(<TodoItem {...t.context.defaultProps} />);
