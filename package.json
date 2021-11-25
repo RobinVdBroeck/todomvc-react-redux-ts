@@ -30,12 +30,8 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-15": "^1.4.3",
     "html-webpack-plugin": "^5.5.0",
-    "husky": "^0.14.3",
-    "lint-staged": "^4.0.1",
-    "pre-commit": "^1.2.2",
     "prettier": "2.4.1",
     "react-test-renderer": "^15.6.1",
-    "rimraf": "^2.6.1",
     "sinon": "^2.3.8",
     "source-map-loader": "^0.2.1",
     "style-loader": "^3.3.1",
@@ -52,23 +48,8 @@
   },
   "scripts": {
     "test": "ava",
-    "build": "tsc",
-    "bundle": "webpack",
     "start": "webpack-dev-server --open",
-    "clean": "rimraf build/ dist/ node_modules/",
-    "precommit": "lint-staged",
     "lint": "tslint src/**/*.ts src/**/*.tsx -c tslint.json --project tsconfig.json"
-  },
-  "lint-staged": {
-    "*.{js,jsx,json}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.{ts,tsx}": [
-      "prettier --write",
-      "tslint --fix",
-      "git add"
-    ]
   },
   "ava": {
     "extensions": [
