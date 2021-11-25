@@ -1,22 +1,22 @@
 import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import test, { TestInterface } from "ava";
+import test, { ExecutionContext, TestInterface } from "ava";
 import sinon from "sinon";
 
-export function setup<T = {}>(
+export function setup<T>(
   setupContext?: () => T,
   afterEach?: (t: T) => void
-): TestInterface<any> {
+): TestInterface<T> {
   Enzyme.configure({ adapter: new Adapter() });
   if (typeof setupContext !== "undefined") {
-    test.beforeEach((t) => {
+    test.beforeEach((t: ExecutionContext<T>) => {
       t.context = setupContext();
     });
   }
   if (typeof afterEach !== "undefined") {
-    test.afterEach.always((t) => {
+    test.afterEach.always((t: ExecutionContext<T>) => {
       sinon.restore();
-      afterEach(t.context as any);
+      afterEach(t.context);
     });
   }
 

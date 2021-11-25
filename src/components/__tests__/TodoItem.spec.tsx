@@ -1,9 +1,8 @@
 import { shallow } from "enzyme";
 import * as React from "react";
-import { createRenderer } from "react-test-renderer/shallow";
 import * as sinon from "sinon";
 import { setup } from "../../utils/test";
-import { IProps, TodoItem } from "../TodoItem";
+import { TodoItem } from "../TodoItem";
 import { TodoTextInput } from "../TodoTextInput";
 
 const test = setup(() => {

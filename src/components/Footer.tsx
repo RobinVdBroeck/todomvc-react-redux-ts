@@ -16,7 +16,7 @@ export interface IProps {
   onShow(filter: TodoFilters): void; // Todo find out the type
 }
 
-export class Footer extends React.Component<IProps, {}> {
+export class Footer extends React.Component<IProps, Record<string, never>> {
   public render() {
     return (
       <footer className="footer">

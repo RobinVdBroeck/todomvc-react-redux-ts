@@ -5,7 +5,7 @@ export interface IProps {
   addTodo(text: string): void;
 }
 
-export class Header extends React.Component<IProps, {}> {
+export class Header extends React.Component<IProps, Record<string, never>> {
   public render() {
     return (
       <header className="header">

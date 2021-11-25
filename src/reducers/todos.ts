@@ -34,10 +34,10 @@ export function todos(state = initialState, action: Actions) {
         todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
       );
 
-    case ActionTypes.COMPLETE_ALL:
+    case ActionTypes.COMPLETE_ALL: {
       const areAllMarked = state.every((todo) => todo.completed);
       return state.map((todo) => ({ ...todo, completed: !areAllMarked }));
-
+    }
     case ActionTypes.CLEAR_COMPLETED:
       return state.filter((todo) => todo.completed === false);
 

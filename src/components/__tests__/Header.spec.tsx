@@ -2,8 +2,8 @@ import { shallow } from "enzyme";
 import * as React from "react";
 import * as sinon from "sinon";
 import { setup } from "../../utils/test";
-import { Header, IProps } from "../Header";
-import { IProps as ITodoTextInputProps, TodoTextInput } from "../TodoTextInput";
+import { Header } from "../Header";
+import { TodoTextInput } from "../TodoTextInput";
 
 const test = setup(() => {
   const sandbox = sinon;

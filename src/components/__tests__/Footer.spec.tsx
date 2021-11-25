@@ -3,7 +3,7 @@ import * as React from "react";
 import * as sinon from "sinon";
 import { TodoFilters } from "../../constants/TodoFilters";
 import { setup } from "../../utils/test";
-import { FILTER_TITLES, Footer, IProps } from "../Footer";
+import { FILTER_TITLES, Footer } from "../Footer";
 
 const test = setup(() => {
   const sandbox = sinon;

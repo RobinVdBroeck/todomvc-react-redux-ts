@@ -1,11 +1,10 @@
 import { shallow, ShallowWrapper } from "enzyme";
 import * as React from "react";
-import { createRenderer } from "react-test-renderer/shallow";
 import * as sinon from "sinon";
 import { TodoFilters } from "../../constants/TodoFilters";
 import { setup } from "../../utils/test";
 import { Footer } from "../Footer";
-import { IProps, MainSection } from "../MainSection";
+import { MainSection } from "../MainSection";
 import { IProps as ITodoItemProps, TodoItem } from "../TodoItem";
 
 const test = setup(() => {
