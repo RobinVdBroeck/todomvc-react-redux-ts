@@ -47,7 +47,7 @@ test("should update value on change", t => {
   todoTextInput.simulate("change", {
     currentTarget: { value: "Use Radox" }
   });
-  t.is(todoTextInput.state().text, "Use Radox");
+  t.is((todoTextInput.state() as any).text, "Use Radox");
 });
 
 test("should call onSave on return key press", t => {
@@ -68,7 +68,7 @@ test("should reset state on return key press if newTodo", t => {
     which: 13,
     currentTarget: { value: "Use Redux" }
   });
-  t.is(todoTextInput.state().text, "");
+  t.is((todoTextInput.state() as any).text, "");
 });
 
 test("should call onSave on blur", t => {

@@ -1,4 +1,4 @@
-import { CommonWrapper, shallow } from "enzyme";
+import { shallow, ShallowWrapper } from "enzyme";
 import * as React from "react";
 import { createRenderer } from "react-test-renderer/shallow";
 import * as sinon from "sinon";
@@ -104,7 +104,7 @@ test("footer onClearCompleted should call clearCompleted", t => {
   t.true(defaultProps.actions.clearCompleted.called);
 });
 
-const todoItemToTodoString = (item: CommonWrapper<ITodoItemProps, any>) =>
+const todoItemToTodoString = (item: ShallowWrapper<ITodoItemProps, any>) =>
   item.props().todo;
 
 test("todo list should render", t => {
