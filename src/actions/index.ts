@@ -2,23 +2,23 @@ import { ActionTypes } from "../constants/ActionTypes";
 
 export const addTodo = (text: string): IAddTodoAction => ({
   type: ActionTypes.ADD_TODO,
-  text
+  text,
 });
 export const deleteTodo = (id: number): IDeleteTodoAction => ({
   type: ActionTypes.DELETE_TODO,
-  id
+  id,
 });
 export const editTodo = (id: number, text: string): IEditTodoAction => ({
   type: ActionTypes.EDIT_TODO,
   id,
-  text
+  text,
 });
 export const completeTodo = (id: number): ICompleteTodoAction => ({
   type: ActionTypes.COMPLETE_TODO,
-  id
+  id,
 });
 export const completeAll = (): ICompleteAllAction => ({
-  type: ActionTypes.COMPLETE_ALL
+  type: ActionTypes.COMPLETE_ALL,
 });
 export const clearCompleted = () => ({ type: ActionTypes.CLEAR_COMPLETED });
 

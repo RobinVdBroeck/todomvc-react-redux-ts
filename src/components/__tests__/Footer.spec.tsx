@@ -13,7 +13,7 @@ const test = setup(
       activeCount: 0,
       filter: TodoFilters.SHOW_ALL,
       onClearCompleted: sandbox.spy(),
-      onShow: sandbox.spy()
+      onShow: sandbox.spy(),
     };
     return { sandbox, defaultProps };
   },
@@ -22,26 +22,26 @@ const test = setup(
   }
 );
 
-test("should render container with class footer", t => {
+test("should render container with class footer", (t) => {
   const footer = shallow(<Footer {...t.context.defaultProps} />);
   t.true(footer.hasClass("footer"));
 });
 
-test("should display active count when 0", t => {
+test("should display active count when 0", (t) => {
   const footer = shallow(
     <Footer {...t.context.defaultProps} activeCount={0} />
   );
   t.true(footer.find(".todo-count").text().includes("No items left"));
 });
 
-test("should display active count when above 0", t => {
+test("should display active count when above 0", (t) => {
   const footer = shallow(
     <Footer {...t.context.defaultProps} activeCount={1} />
   );
   t.true(footer.find(".todo-count").text().includes("1 item left"));
 });
 
-test("should render filters", t => {
+test("should render filters", (t) => {
   const footer = shallow(<Footer {...t.context.defaultProps} />);
   const filterList = footer.find("ul");
   t.true(filterList.hasClass("filters"));
@@ -51,25 +51,25 @@ test("should render filters", t => {
   t.is(filters.find(".selected").length, 1);
   t.true(filters.every("li"));
 
-  const filtersText = filters.map(filter => filter.text());
+  const filtersText = filters.map((filter) => filter.text());
   t.true(
-    filtersText.every(value => Object.values(FILTER_TITLES).includes(value))
+    filtersText.every((value) => Object.values(FILTER_TITLES).includes(value))
   );
 });
 
-test("should call onShow when a filter is clicked", t => {
+test("should call onShow when a filter is clicked", (t) => {
   const expectedFilter = TodoFilters.SHOW_ACTIVE;
   const { defaultProps } = t.context;
   const footer = shallow(<Footer {...defaultProps} />);
   const link = footer
     .find("ul.filters li a")
-    .filterWhere(filter => filter.text() === FILTER_TITLES[expectedFilter])
+    .filterWhere((filter) => filter.text() === FILTER_TITLES[expectedFilter])
     .first();
   link.simulate("click");
   t.true(defaultProps.onShow.calledWith(expectedFilter));
 });
 
-test("shouldnt show clear button when no completed todos", t => {
+test("shouldnt show clear button when no completed todos", (t) => {
   const footer = shallow(
     <Footer {...t.context.defaultProps} completedCount={0} />
   );
@@ -77,7 +77,7 @@ test("shouldnt show clear button when no completed todos", t => {
   t.false(clear.exists());
 });
 
-test("should render clear button when completed todos", t => {
+test("should render clear button when completed todos", (t) => {
   const footer = shallow(
     <Footer {...t.context.defaultProps} completedCount={1} />
   );
@@ -86,7 +86,7 @@ test("should render clear button when completed todos", t => {
   t.true(clear.hasClass("clear-completed"));
 });
 
-test("should call onClearCompleted on clear button click", t => {
+test("should call onClearCompleted on clear button click", (t) => {
   const { defaultProps } = t.context;
   const footer = shallow(<Footer {...defaultProps} completedCount={1} />);
   const clear = footer.find("button.clear-completed");

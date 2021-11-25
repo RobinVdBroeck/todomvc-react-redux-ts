@@ -22,7 +22,7 @@ export interface IState {
 const TODO_FILTERS = {
   [TodoFilters.SHOW_ALL]: () => true,
   [TodoFilters.SHOW_ACTIVE]: (todo: ITodo) => !todo.completed,
-  [TodoFilters.SHOW_COMPLETED]: (todo: ITodo) => todo.completed
+  [TodoFilters.SHOW_COMPLETED]: (todo: ITodo) => todo.completed,
 };
 
 export class MainSection extends React.Component<IProps, IState> {
@@ -45,9 +45,9 @@ export class MainSection extends React.Component<IProps, IState> {
       <section className="main">
         {this.renderToggleAll(completedCount)}
         <ul className="todo-list">
-          {filteredTodos.map(todo =>
+          {filteredTodos.map((todo) => (
             <TodoItem key={todo.id} todo={todo} {...actions} />
-          )}
+          ))}
         </ul>
         {this.renderFooter(completedCount)}
       </section>

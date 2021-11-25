@@ -43,9 +43,7 @@ export class TodoItem extends React.Component<IProps, IState> {
             checked={todo.completed}
             onChange={this.onChange}
           />
-          <label onDoubleClick={this.handleDoubleClick}>
-            {todo.text}
-          </label>
+          <label onDoubleClick={this.handleDoubleClick}>{todo.text}</label>
           <button className="destroy" onClick={this.onClick} />
         </div>
       );
@@ -55,7 +53,7 @@ export class TodoItem extends React.Component<IProps, IState> {
       <li
         className={classnames({
           completed: todo.completed,
-          editing: this.state.editing
+          editing: this.state.editing,
         })}
       >
         {element}

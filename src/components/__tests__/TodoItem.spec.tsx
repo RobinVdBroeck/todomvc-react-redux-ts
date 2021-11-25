@@ -13,21 +13,21 @@ const test = setup(
       todo: {
         id: 0,
         text: "Use Redux",
-        completed: false
+        completed: false,
       },
       editTodo: sandbox.spy(),
       deleteTodo: sandbox.spy(),
-      completeTodo: sandbox.spy()
+      completeTodo: sandbox.spy(),
     };
     return {
       sandbox,
-      defaultProps
+      defaultProps,
     };
   },
   ({ sandbox }) => sandbox.reset()
 );
 
-test("initial render", t => {
+test("initial render", (t) => {
   const todoItem = shallow(<TodoItem {...t.context.defaultProps} />);
 
   t.is(todoItem.type(), "li");
@@ -50,7 +50,7 @@ test("initial render", t => {
   t.true(button.hasClass("destroy"));
 });
 
-test("input onChange should call completeTodo", t => {
+test("input onChange should call completeTodo", (t) => {
   const { defaultProps } = t.context;
   const todoItem = shallow(<TodoItem {...defaultProps} />);
   const input = todoItem.find("input");
@@ -58,7 +58,7 @@ test("input onChange should call completeTodo", t => {
   t.true(defaultProps.completeTodo.calledWith(0));
 });
 
-test("button onClick should call deleteTodo", t => {
+test("button onClick should call deleteTodo", (t) => {
   const { defaultProps } = t.context;
   const todoItem = shallow(<TodoItem {...defaultProps} />);
   const button = todoItem.find("button");
@@ -66,26 +66,26 @@ test("button onClick should call deleteTodo", t => {
   t.true(defaultProps.deleteTodo.calledWith(0));
 });
 
-test("label onDoubleClick should put component in edit state", t => {
+test("label onDoubleClick should put component in edit state", (t) => {
   const todoItem = shallow(<TodoItem {...t.context.defaultProps} />);
   const label = todoItem.find("label");
   label.simulate("doubleClick");
   t.true(todoItem.hasClass("editing"));
 });
 
-test("edit state render", t => {
+test("edit state render", (t) => {
   const todoItem = shallow(<TodoItem {...t.context.defaultProps} />);
   const label = todoItem.find("label");
   label.simulate("doubleClick");
 
   const input = todoItem
     .children()
-    .findWhere(child => child.type() === TodoTextInput);
+    .findWhere((child) => child.type() === TodoTextInput);
   t.is(input.props().text, "Use Redux");
   t.true(input.props().editing);
 });
 
-test("TodoTextInput onSave should call editTodo", t => {
+test("TodoTextInput onSave should call editTodo", (t) => {
   const { defaultProps } = t.context;
   const todoItem = shallow(<TodoItem {...defaultProps} />);
   const label = todoItem.find("label");
@@ -93,13 +93,13 @@ test("TodoTextInput onSave should call editTodo", t => {
 
   const input = todoItem
     .children()
-    .findWhere(child => child.type() === TodoTextInput);
+    .findWhere((child) => child.type() === TodoTextInput);
 
   input.props().onSave("Use Redux");
   t.true(defaultProps.editTodo.calledWith(0, "Use Redux"));
 });
 
-test("TodoTextInput onSave should call deleteTodo if text is empty", t => {
+test("TodoTextInput onSave should call deleteTodo if text is empty", (t) => {
   const { defaultProps } = t.context;
   const todoItem = shallow(<TodoItem {...defaultProps} />);
   const label = todoItem.find("label");
@@ -107,20 +107,20 @@ test("TodoTextInput onSave should call deleteTodo if text is empty", t => {
 
   const input = todoItem
     .children()
-    .findWhere(child => child.type() === TodoTextInput);
+    .findWhere((child) => child.type() === TodoTextInput);
 
   input.props().onSave("");
   t.true(defaultProps.deleteTodo.calledWith(0));
 });
 
-test("TodoTextInput onSave should exit component from edit state", t => {
+test("TodoTextInput onSave should exit component from edit state", (t) => {
   const todoItem = shallow(<TodoItem {...t.context.defaultProps} />);
   const label = todoItem.find("label");
   label.simulate("doubleClick");
 
   const input = todoItem
     .children()
-    .findWhere(child => child.type() === TodoTextInput);
+    .findWhere((child) => child.type() === TodoTextInput);
 
   input.props().onSave("Use Redux");
 

@@ -15,7 +15,7 @@ export interface IState {
 export class TodoTextInput extends React.Component<IProps, IState> {
   public static defaultProps: Partial<IProps> = {
     text: "",
-    newTodo: true
+    newTodo: true,
   };
 
   constructor(props: IProps) {
@@ -28,7 +28,7 @@ export class TodoTextInput extends React.Component<IProps, IState> {
       <input
         className={classnames({
           edit: this.props.editing,
-          "new-todo": this.props.newTodo
+          "new-todo": this.props.newTodo,
         })}
         type="text"
         placeholder={this.props.placeholder}

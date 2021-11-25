@@ -5,7 +5,7 @@ import { TodoFilters } from "../constants/TodoFilters";
 export const FILTER_TITLES = {
   [TodoFilters.SHOW_ALL]: "All",
   [TodoFilters.SHOW_ACTIVE]: "Active",
-  [TodoFilters.SHOW_COMPLETED]: "Completed"
+  [TodoFilters.SHOW_COMPLETED]: "Completed",
 };
 
 export interface IProps {
@@ -25,12 +25,10 @@ export class Footer extends React.Component<IProps, {}> {
           {[
             TodoFilters.SHOW_ALL,
             TodoFilters.SHOW_ACTIVE,
-            TodoFilters.SHOW_COMPLETED
-          ].map(filter =>
-            <li key={filter}>
-              {this.renderFilterLink(filter)}
-            </li>
-          )}
+            TodoFilters.SHOW_COMPLETED,
+          ].map((filter) => (
+            <li key={filter}>{this.renderFilterLink(filter)}</li>
+          ))}
         </ul>
         {this.renderClearButton()}
       </footer>
@@ -57,7 +55,7 @@ export class Footer extends React.Component<IProps, {}> {
     return (
       <a
         className={classnames({
-          selected: filter === selectedFilter
+          selected: filter === selectedFilter,
         })}
         style={{ cursor: "pointer" }}
         onClick={onClick}

@@ -5,32 +5,32 @@ module.exports = {
   entry: path.resolve(__dirname, "src", "index.tsx"),
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js"
+    filename: "bundle.js",
   },
   devtool: "inline-source-map",
   module: {
     rules: [
       {
         test: /\.tsx?/,
-        use: "ts-loader"
+        use: "ts-loader",
       },
       {
         test: /\.css/,
-        use: ["style-loader", "css-loader"]
+        use: ["style-loader", "css-loader"],
       },
       {
         enforce: "pre",
         test: /\.js$/,
-        loader: "source-map-loader"
-      }
-    ]
+        loader: "source-map-loader",
+      },
+    ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".jsx", ".js"]
+    extensions: [".ts", ".tsx", ".jsx", ".js"],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "index.html")
-    })
-  ]
+      template: path.resolve(__dirname, "src", "index.html"),
+    }),
+  ],
 };

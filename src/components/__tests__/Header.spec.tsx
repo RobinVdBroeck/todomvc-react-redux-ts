@@ -9,17 +9,17 @@ const test = setup(
   () => {
     const sandbox = sinon.sandbox.create();
     const defaultProps = {
-      addTodo: sandbox.spy()
+      addTodo: sandbox.spy(),
     };
     return {
       sandbox,
-      defaultProps
+      defaultProps,
     };
   },
   ({ sandbox }) => sandbox.restore()
 );
 
-test("should render correctly", t => {
+test("should render correctly", (t) => {
   const header = shallow(<Header {...t.context.defaultProps} />);
 
   t.is(header.type(), "header");
@@ -35,7 +35,7 @@ test("should render correctly", t => {
   t.is(input.props().placeholder, "What needs to be done?");
 });
 
-test("should call addTodo if length of text is greater than 0", t => {
+test("should call addTodo if length of text is greater than 0", (t) => {
   const { defaultProps } = t.context;
   const header = shallow(<Header {...defaultProps} />);
 

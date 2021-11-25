@@ -16,37 +16,37 @@ const test = setup(
         {
           text: "Use Redux",
           completed: false,
-          id: 0
+          id: 0,
         },
         {
           text: "Run the tests",
           completed: true,
-          id: 1
-        }
+          id: 1,
+        },
       ],
       actions: {
         editTodo: sandbox.spy(),
         deleteTodo: sandbox.spy(),
         completeTodo: sandbox.spy(),
         completeAll: sandbox.spy(),
-        clearCompleted: sandbox.spy()
-      }
+        clearCompleted: sandbox.spy(),
+      },
     };
     return {
       sandbox,
-      defaultProps
+      defaultProps,
     };
   },
   ({ sandbox }) => sandbox.restore()
 );
 
-test("should render container", t => {
+test("should render container", (t) => {
   const mainSection = shallow(<MainSection {...t.context.defaultProps} />);
   t.is(mainSection.type(), "section");
   t.true(mainSection.hasClass("main"));
 });
 
-test("toggle all input should render", t => {
+test("toggle all input should render", (t) => {
   const mainSection = shallow(<MainSection {...t.context.defaultProps} />);
 
   const toggle = mainSection.childAt(0);
@@ -55,7 +55,7 @@ test("toggle all input should render", t => {
   t.false(toggle.props().checked);
 });
 
-test("toggle all input should be checked if all todos completed", t => {
+test("toggle all input should be checked if all todos completed", (t) => {
   const todos = [{ text: "Use Redux", completed: true, id: 0 }];
   const mainSection = shallow(
     <MainSection {...t.context.defaultProps} todos={todos} />
@@ -64,7 +64,7 @@ test("toggle all input should be checked if all todos completed", t => {
   t.true(toggle.props().checked);
 });
 
-test("toggle all input should call completeAll on change", t => {
+test("toggle all input should call completeAll on change", (t) => {
   const { defaultProps } = t.context;
   const mainSection = shallow(<MainSection {...defaultProps} />);
   const toggle = mainSection.childAt(0);
@@ -72,7 +72,7 @@ test("toggle all input should call completeAll on change", t => {
   t.true(defaultProps.actions.completeAll.called);
 });
 
-test("footer should render", t => {
+test("footer should render", (t) => {
   const { defaultProps } = t.context;
   const mainSection = shallow(<MainSection {...defaultProps} />);
 
@@ -83,7 +83,7 @@ test("footer should render", t => {
   t.is(footer.props().filter, TodoFilters.SHOW_ALL);
 });
 
-test("footer onShow should set the filter", t => {
+test("footer onShow should set the filter", (t) => {
   const mainSection = shallow(<MainSection {...t.context.defaultProps} />);
 
   const footer = mainSection.childAt(2);
@@ -95,7 +95,7 @@ test("footer onShow should set the filter", t => {
   t.is(updatedFooter.props().filter, TodoFilters.SHOW_COMPLETED);
 });
 
-test("footer onClearCompleted should call clearCompleted", t => {
+test("footer onClearCompleted should call clearCompleted", (t) => {
   const { defaultProps } = t.context;
   const mainSection = shallow(<MainSection {...defaultProps} />);
 
@@ -107,7 +107,7 @@ test("footer onClearCompleted should call clearCompleted", t => {
 const todoItemToTodoString = (item: ShallowWrapper<ITodoItemProps, any>) =>
   item.props().todo;
 
-test("todo list should render", t => {
+test("todo list should render", (t) => {
   const { defaultProps } = t.context;
   const mainSection = shallow(<MainSection {...defaultProps} />);
 
@@ -116,11 +116,11 @@ test("todo list should render", t => {
 
   const todos = list.children();
   t.is(todos.length, 2);
-  t.true(todos.everyWhere(todo => todo.type() === TodoItem));
+  t.true(todos.everyWhere((todo) => todo.type() === TodoItem));
   t.deepEqual(todos.map(todoItemToTodoString), defaultProps.todos);
 });
 
-test("todo list should filter items", t => {
+test("todo list should filter items", (t) => {
   const { defaultProps } = t.context;
   const mainSection = shallow(<MainSection {...defaultProps} />);
 
@@ -129,6 +129,6 @@ test("todo list should filter items", t => {
 
   const list = mainSection.childAt(1);
   t.is(list.children().length, 1);
-  const expectedTodos = defaultProps.todos.filter(todo => todo.completed);
+  const expectedTodos = defaultProps.todos.filter((todo) => todo.completed);
   t.deepEqual(list.children().map(todoItemToTodoString), expectedTodos);
 });
