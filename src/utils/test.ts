@@ -1,23 +1,22 @@
 import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-15";
-import * as ava from "ava";
+import test from "ava";
 
-// T is type of the context
 export function setup<T = {}>(
   setupContext?: () => T,
   afterEach?: (t: T) => void
-): ava.RegisterContextual<T> {
+): any {
   Enzyme.configure({ adapter: new Adapter() });
   if (typeof setupContext !== "undefined") {
-    ava.test.beforeEach((t) => {
+    test.beforeEach((t) => {
       t.context = setupContext();
     });
   }
   if (typeof afterEach !== "undefined") {
-    ava.test.afterEach.always((t) => {
-      afterEach(t.context);
+    test.afterEach.always((t) => {
+      afterEach(t.context as any);
     });
   }
 
-  return ava.test;
+  return test;
 }

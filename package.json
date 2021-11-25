@@ -5,6 +5,7 @@
   "author": "Robin Van den Broeck <robin.broeck@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@ava/typescript": "^3.0.1",
     "@types/classnames": "^2.3.1",
     "@types/enzyme": "^3.10.10",
     "@types/enzyme-adapter-react-15": "^1.0.6",
@@ -15,7 +16,7 @@
     "@types/sinon": "^2.3.2",
     "@types/tape": "^4.2.30",
     "@types/webpack": "^3.0.4",
-    "ava": "^0.21.0",
+    "ava": "^3.15.0",
     "classnames": "^2.3.1",
     "css-loader": "^0.28.4",
     "enzyme": "^3.11.0",
@@ -38,7 +39,7 @@
     "tape": "^4.7.0",
     "todomvc-app-css": "^2.1.0",
     "ts-loader": "^2.2.2",
-    "ts-node": "^3.2.0",
+    "ts-node": "^10.4.0",
     "tslint": "^5.5.0",
     "tslint-config-prettier": "^1.1.0",
     "tslint-eslint-rules": "^4.1.1",
@@ -49,7 +50,6 @@
     "webpack-dev-server": "^2.5.1"
   },
   "scripts": {
-    "pretest": "npm run build",
     "test": "ava",
     "build": "tsc",
     "bundle": "webpack -p",
@@ -68,5 +68,14 @@
       "tslint --fix",
       "git add"
     ]
+  },
+  "ava": {
+      "extensions": [
+        "ts",
+        "tsx"
+      ],
+      "require": [
+        "ts-node/register"
+      ]
   }
 }
