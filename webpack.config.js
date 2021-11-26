@@ -1,18 +1,19 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   entry: path.resolve(__dirname, "src", "index.tsx"),
-  output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+  optimization: {
+    runtimeChunk: true,
   },
   devtool: "inline-source-map",
   module: {
     rules: [
       {
         test: /\.tsx?/,
-        use: "ts-loader",
+        exclude: /node_modules/,
+        use: "babel-loader",
       },
       {
         test: /\.css/,
@@ -31,6 +32,15 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "index.html"),
+    }),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+        mode: "write-references",
+      },
     }),
   ],
 };
