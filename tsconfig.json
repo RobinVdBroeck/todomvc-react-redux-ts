@@ -9,5 +9,6 @@
     "strict": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
-  }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "./jest-setup.js"]
 }

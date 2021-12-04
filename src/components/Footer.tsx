@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import * as React from "react";
+import React from "react";
 import { TodoFilters } from "../constants/TodoFilters";
 
 export const FILTER_TITLES = {
@@ -40,7 +40,7 @@ export class Footer extends React.Component<IProps, Record<string, never>> {
     const itemWord = activeCount === 1 ? "item" : "items";
 
     return (
-      <span className="todo-count">
+      <span className="todo-count" data-testid="todo-count">
         <strong>{activeCount || "No"}</strong> {itemWord} left
       </span>
     );
