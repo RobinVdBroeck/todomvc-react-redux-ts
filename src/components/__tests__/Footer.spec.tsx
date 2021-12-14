@@ -12,10 +12,6 @@ const defaultProps = {
   onShow: jest.fn(),
 };
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
-
 test("should render container with class footer", () => {
   render(<Footer {...defaultProps} />);
 

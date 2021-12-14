@@ -1,39 +1,33 @@
-import { configure, shallow } from "enzyme";
-import * as React from "react";
+import React from "react";
+import { render, screen, within } from "@testing-library/react";
 import { Header } from "../Header";
-import { TodoTextInput } from "../TodoTextInput";
-import Adapter from "enzyme-adapter-react-16";
+import userEvent from "@testing-library/user-event";
 
 const defaultProps = {
   addTodo: jest.fn(),
 };
 
-beforeAll(() => {
-  configure({ adapter: new Adapter() });
-});
-
 test("should render correctly", () => {
-  const header = shallow(<Header {...defaultProps} />);
+  render(<Header {...defaultProps} />);
 
-  expect(header.type()).toBe("header");
-  expect(header.hasClass("header")).toBe(true);
+  const header = screen.getByRole("banner");
+  expect(header).toHaveClass("header");
 
-  const h1 = header.children().at(0);
-  expect(h1.type()).toBe("h1");
-  expect(h1.text()).toBe("todos");
+  const heading = within(header).getByRole("heading");
+  expect(heading).toHaveTextContent("todos");
 
-  const input = header.children().at(1);
-  expect(input.type()).toBe(TodoTextInput);
-  expect(input.props().newTodo).toBe(true);
-  expect(input.props().placeholder).toBe("What needs to be done?");
+  const input = within(header).queryByPlaceholderText("What needs to be done?");
+  expect(input).not.toBeNull();
 });
 
 test("should call addTodo if length of text is greater than 0", () => {
-  const header = shallow(<Header {...defaultProps} />);
+  const props = defaultProps;
+  render(<Header {...props} />);
 
-  const input = header.children().at(1);
-  input.props().onSave("");
-  expect(defaultProps.addTodo).not.toBeCalled();
-  input.props().onSave("Use Redux");
-  expect(defaultProps.addTodo).toBeCalled();
+  const input = screen.getByPlaceholderText("What needs to be done?");
+  userEvent.type(input, "{enter}");
+  expect(props.addTodo).not.toHaveBeenCalled();
+
+  userEvent.type(input, "Use Redux{enter}");
+  expect(props.addTodo).toHaveBeenCalledWith("Use Redux");
 });
