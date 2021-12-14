@@ -1,8 +1,76 @@
-import * as React from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { TodoFilters } from "../constants/TodoFilters";
 import { ITodo } from "../interfaces/ITodo";
 import { Footer } from "./Footer";
 import { TodoItem } from "./TodoItem";
+
+export interface IState {
+  filter: TodoFilters;
+}
+
+const TODO_FILTERS = {
+  [TodoFilters.SHOW_ALL]: () => true,
+  [TodoFilters.SHOW_ACTIVE]: (todo: ITodo) => !todo.completed,
+  [TodoFilters.SHOW_COMPLETED]: (todo: ITodo) => todo.completed,
+};
+
+function ToggleAll({
+  completedCount,
+  todos,
+  completeAll,
+}: {
+  completedCount: number;
+  todos: ITodo[];
+  completeAll: () => void;
+}) {
+  if (todos.length > 0) {
+    return (
+      <>
+        <input
+          id="toggle-all"
+          className="toggle-all"
+          type="checkbox"
+          data-testid="toggle-all"
+          checked={completedCount === todos.length}
+          onChange={completeAll}
+        />
+        <label htmlFor="toggle-all"></label>
+      </>
+    );
+  }
+  return <></>;
+}
+
+interface MainSectionFooterProps {
+  completedCount: number;
+  todos: ITodo[];
+  filter: TodoFilters;
+  handleClearCompleted: () => void;
+  handleShow: (filter: TodoFilters) => void;
+}
+
+function MainSectionFooter({
+  completedCount,
+  todos,
+  filter,
+  handleClearCompleted,
+  handleShow,
+}: MainSectionFooterProps) {
+  const activeCount = todos.length - completedCount;
+
+  if (todos.length) {
+    return (
+      <Footer
+        completedCount={completedCount}
+        activeCount={activeCount}
+        filter={filter}
+        onClearCompleted={handleClearCompleted}
+        onShow={handleShow}
+      />
+    );
+  }
+  return <></>;
+}
 
 export interface IProps {
   todos: ITodo[];
@@ -15,87 +83,51 @@ export interface IProps {
   };
 }
 
-export interface IState {
-  filter: TodoFilters;
-}
+export function MainSection({ todos, actions }: IProps) {
+  const [filter, setFilter] = useState(TodoFilters.SHOW_ALL);
 
-const TODO_FILTERS = {
-  [TodoFilters.SHOW_ALL]: () => true,
-  [TodoFilters.SHOW_ACTIVE]: (todo: ITodo) => !todo.completed,
-  [TodoFilters.SHOW_COMPLETED]: (todo: ITodo) => todo.completed,
-};
+  const handleClearCompleted = useCallback(() => {
+    actions.clearCompleted();
+  }, [actions]);
 
-export class MainSection extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props);
-    this.state = { filter: TodoFilters.SHOW_ALL };
-  }
+  const handleShow = useCallback(
+    (filter: TodoFilters) => {
+      setFilter(filter);
+    },
+    [setFilter]
+  );
 
-  public render() {
-    const { todos, actions } = this.props;
-    const { filter } = this.state;
+  const filteredTodos = useMemo(
+    () => todos.filter(TODO_FILTERS[filter]),
+    [todos, filter]
+  );
+  const completedCount = useMemo(
+    () =>
+      todos.reduce((count, todo) => (todo.completed ? count + 1 : count), 0),
+    [todos]
+  );
 
-    const filteredTodos = todos.filter(TODO_FILTERS[filter]);
-    const completedCount = todos.reduce(
-      (count, todo) => (todo.completed ? count + 1 : count),
-      0
-    );
+  return (
+    <main className="main">
+      <ToggleAll
+        completedCount={completedCount}
+        todos={todos}
+        completeAll={actions.completeAll}
+      />
 
-    return (
-      <main className="main">
-        {this.renderToggleAll(completedCount)}
-        <ul className="todo-list">
-          {filteredTodos.map((todo) => (
-            <TodoItem key={todo.id} todo={todo} {...actions} />
-          ))}
-        </ul>
-        {this.renderFooter(completedCount)}
-      </main>
-    );
-  }
+      <ul className="todo-list">
+        {filteredTodos.map((todo) => (
+          <TodoItem key={todo.id} todo={todo} {...actions} />
+        ))}
+      </ul>
 
-  private handleClearCompleted = () => {
-    this.props.actions.clearCompleted();
-  };
-
-  private handleShow = (filter: TodoFilters) => {
-    this.setState({ filter });
-  };
-
-  private renderToggleAll(completedCount: number) {
-    const { todos, actions } = this.props;
-    if (todos.length > 0) {
-      return (
-        <>
-          <input
-            id="toggle-all"
-            className="toggle-all"
-            type="checkbox"
-            data-testid="toggle-all"
-            checked={completedCount === todos.length}
-            onChange={actions.completeAll}
-          />
-          <label htmlFor="toggle-all"></label>
-        </>
-      );
-    }
-  }
-
-  private renderFooter(completedCount: number) {
-    const { todos } = this.props;
-    const { filter } = this.state;
-    const activeCount = todos.length - completedCount;
-
-    if (todos.length) {
-      return (
-        <Footer
-          completedCount={completedCount}
-          activeCount={activeCount}
-          filter={filter}
-          onClearCompleted={this.handleClearCompleted}
-          onShow={this.handleShow}
-        />
-      );
-    }
-  }
+      <MainSectionFooter
+        todos={todos}
+        completedCount={completedCount}
+        filter={filter}
+        handleClearCompleted={handleClearCompleted}
+        handleShow={handleShow}
+      />
+    </main>
+  );
 }
