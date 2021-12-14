@@ -42,7 +42,7 @@ export class MainSection extends React.Component<IProps, IState> {
     );
 
     return (
-      <section className="main">
+      <main className="main">
         {this.renderToggleAll(completedCount)}
         <ul className="todo-list">
           {filteredTodos.map((todo) => (
@@ -50,7 +50,7 @@ export class MainSection extends React.Component<IProps, IState> {
           ))}
         </ul>
         {this.renderFooter(completedCount)}
-      </section>
+      </main>
     );
   }
 
@@ -66,12 +66,17 @@ export class MainSection extends React.Component<IProps, IState> {
     const { todos, actions } = this.props;
     if (todos.length > 0) {
       return (
-        <input
-          className="toggle-all"
-          type="checkbox"
-          checked={completedCount === todos.length}
-          onChange={actions.completeAll}
-        />
+        <>
+          <input
+            id="toggle-all"
+            className="toggle-all"
+            type="checkbox"
+            data-testid="toggle-all"
+            checked={completedCount === todos.length}
+            onChange={actions.completeAll}
+          />
+          <label htmlFor="toggle-all"></label>
+        </>
       );
     }
   }

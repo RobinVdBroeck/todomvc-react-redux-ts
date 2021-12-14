@@ -1,10 +1,12 @@
+import React from "react";
 import { configure, shallow, ShallowWrapper } from "enzyme";
-import * as React from "react";
 import Adapter from "enzyme-adapter-react-16";
+import { render, screen, within } from "@testing-library/react";
 import { TodoFilters } from "../../constants/TodoFilters";
 import { Footer } from "../Footer";
 import { MainSection } from "../MainSection";
 import { IProps as ITodoItemProps, TodoItem } from "../TodoItem";
+import userEvent from "@testing-library/user-event";
 
 const defaultProps = {
   todos: [
@@ -33,87 +35,87 @@ beforeAll(() => {
 });
 
 test("should render container", () => {
-  const mainSection = shallow(<MainSection {...defaultProps} />);
-  expect(mainSection.type()).toBe("section");
-  expect(mainSection.hasClass("main")).toBe(true);
+  render(<MainSection {...defaultProps} />);
+  const main = screen.getByRole("main");
+  expect(main).toHaveClass("main");
 });
 
 test("toggle all input should render", () => {
-  const mainSection = shallow(<MainSection {...defaultProps} />);
+  render(<MainSection {...defaultProps} />);
 
-  const toggle = mainSection.childAt(0);
-  expect(toggle.type()).toBe("input");
-  expect(toggle.props().type).toBe("checkbox");
-  expect(toggle.props().checked).toBe(false);
+  const toggle = screen.getByTestId("toggle-all");
+  expect(toggle).not.toBeChecked();
 });
 
 test("toggle all input should be checked if all todos completed", () => {
   const todos = [{ text: "Use Redux", completed: true, id: 0 }];
-  const mainSection = shallow(<MainSection {...defaultProps} todos={todos} />);
-  const toggle = mainSection.childAt(0);
-  expect(toggle.props().checked).toBe(true);
+  render(<MainSection {...defaultProps} todos={todos} />);
+
+  const toggle = screen.getByTestId("toggle-all");
+  expect(toggle).toBeChecked();
 });
 
 test("toggle all input should call completeAll on change", () => {
-  const mainSection = shallow(<MainSection {...defaultProps} />);
-  const toggle = mainSection.childAt(0);
-  toggle.props().onChange({});
+  render(<MainSection {...defaultProps} />);
+  const toggle = screen.getByTestId("toggle-all");
+  userEvent.click(toggle);
   expect(defaultProps.actions.completeAll).toBeCalled();
 });
 
 test("footer should render", () => {
-  const mainSection = shallow(<MainSection {...defaultProps} />);
+  render(<MainSection {...defaultProps} />);
 
-  const footer = mainSection.childAt(2);
-  expect(footer.type()).toBe(Footer);
-  expect(footer.props().completedCount).toBe(1);
-  expect(footer.props().activeCount).toBe(1);
-  expect(footer.props().filter).toBe(TodoFilters.SHOW_ALL);
+  const footer = screen.queryByRole("contentinfo");
+  expect(footer).toBeInTheDocument();
 });
 
 test("footer onShow should set the filter", () => {
-  const mainSection = shallow(<MainSection {...defaultProps} />);
+  render(<MainSection {...defaultProps} />);
 
-  const footer = mainSection.childAt(2);
-  expect(footer.props().filter).toBe(TodoFilters.SHOW_ALL);
+  const footer = screen.queryByRole("contentinfo");
+  const all = within(footer).getByText("All");
+  expect(all).toHaveClass("selected");
 
-  footer.props().onShow(TodoFilters.SHOW_COMPLETED);
-  mainSection.update(); // Update it because the footer is rerendered
-  const updatedFooter = mainSection.childAt(2);
-  expect(updatedFooter.props().filter).toBe(TodoFilters.SHOW_COMPLETED);
+  const completed = within(footer).getByText("Completed");
+  userEvent.click(completed);
+  expect(all).not.toHaveClass("selected");
+  expect(completed).toHaveClass("selected");
 });
 
 test("footer onClearCompleted should call clearCompleted", () => {
-  const mainSection = shallow(<MainSection {...defaultProps} />);
+  render(<MainSection {...defaultProps} />);
 
-  const footer = mainSection.childAt(2);
-  footer.simulate("clearCompleted");
+  const footer = screen.queryByRole("contentinfo");
+  const clearCompleted = within(footer).getByText("Clear completed");
+  userEvent.click(clearCompleted);
   expect(defaultProps.actions.clearCompleted).toBeCalled();
 });
 
-const todoItemToTodoString = (item: ShallowWrapper<ITodoItemProps, any>) =>
-  item.props().todo;
-
 test("todo list should render", () => {
-  const mainSection = shallow(<MainSection {...defaultProps} />);
+  render(<MainSection {...defaultProps} />);
 
-  const list = mainSection.childAt(1);
-  expect(list.type()).toBe("ul");
+  const list = screen
+    .getAllByRole("list")
+    .find((item) => item.classList.contains("todo-list"));
+  expect(list).toBeInTheDocument();
 
-  const todos = list.children();
-  expect(todos.length).toBe(2);
-  expect(todos.everyWhere((todo) => todo.type() === TodoItem)).toBe(true);
-  expect(todos.map(todoItemToTodoString)).toEqual(defaultProps.todos);
+  const listItems = within(list).getAllByRole("listitem");
+  expect(listItems).toHaveLength(2);
 });
 
 test("todo list should filter items", () => {
-  const mainSection = shallow(<MainSection {...defaultProps} />);
+  render(<MainSection {...defaultProps} />);
 
-  const footer = mainSection.childAt(2);
-  footer.simulate("show", TodoFilters.SHOW_COMPLETED);
+  const showCompleted = screen.getByText("Completed");
+  userEvent.click(showCompleted);
 
-  const list = mainSection.childAt(1);
-  expect(list.children().length).toBe(1);
-  const expectedTodos = defaultProps.todos.filter((todo) => todo.completed);
-  expect(list.children().map(todoItemToTodoString)).toEqual(expectedTodos);
+  const list = screen
+    .getAllByRole("list")
+    .find((item) => item.classList.contains("todo-list"));
+  expect(list).toBeInTheDocument();
+
+  const listItems = within(list).getAllByRole("listitem");
+  expect(listItems).toHaveLength(1);
+  const listItem = listItems[0];
+  expect(listItem.textContent).toBe("Run the tests");
 });
