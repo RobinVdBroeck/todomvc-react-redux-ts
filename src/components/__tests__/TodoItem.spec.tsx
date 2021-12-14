@@ -1,12 +1,8 @@
-import { configure, shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-import * as React from "react";
+import React from "react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { TodoItem } from "../TodoItem";
-import { TodoTextInput } from "../TodoTextInput";
 
-beforeAll(() => {
-  configure({ adapter: new Adapter() });
-});
 const defaultProps = {
   todo: {
     id: 0,
@@ -19,98 +15,75 @@ const defaultProps = {
 };
 
 test("initial render", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
+  const { asFragment } = render(<TodoItem {...defaultProps} />);
 
-  expect(todoItem.type()).toBe("li");
-  expect(todoItem.hasClass("")).toBe(true);
-
-  const div = todoItem.childAt(0);
-  expect(div.type()).toBe("div");
-  expect(div.hasClass("view")).toBe(true);
-
-  const input = div.childAt(0);
-  expect(input.type()).toBe("input");
-  expect(input.props().checked).toBe(false);
-
-  const label = div.childAt(1);
-  expect(label.type()).toBe("label");
-  expect(label.text()).toBe("Use Redux");
-
-  const button = div.childAt(2);
-  expect(button.type()).toBe("button");
-  expect(button.hasClass("destroy")).toBe(true);
+  expect(asFragment()).toMatchSnapshot();
 });
 
-test("input onChange should call completeTodo", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
-  const input = todoItem.find("input");
-  input.simulate("change");
+test("marking item as completed should call completetodo", () => {
+  render(<TodoItem {...defaultProps} />);
+
+  const input = screen.getByRole("checkbox");
+  userEvent.click(input);
+
   expect(defaultProps.completeTodo).toHaveBeenCalledWith(0);
 });
 
-test("button onClick should call deleteTodo", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
-  const button = todoItem.find("button");
-  button.simulate("click");
+test("removing item should call deleteTodo", () => {
+  render(<TodoItem {...defaultProps} />);
+
+  const button = screen.getByRole("button");
+  userEvent.click(button);
+
   expect(defaultProps.deleteTodo).toHaveBeenCalledWith(0);
 });
 
-test("label onDoubleClick should put component in edit state", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
-  const label = todoItem.find("label");
-  label.simulate("doubleClick");
-  expect(todoItem.hasClass("editing")).toBe(true);
+test("double click should put component in edit state", () => {
+  render(<TodoItem {...defaultProps} />);
+
+  const listItem = screen.getByRole("listitem");
+  const label = within(listItem).getByText("Use Redux");
+  userEvent.dblClick(label);
+
+  expect(listItem).toHaveClass("editing");
 });
 
-test("edit state render", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
-  const label = todoItem.find("label");
-  label.simulate("doubleClick");
+test("pressing enter while editing should call editTodo", () => {
+  render(<TodoItem {...defaultProps} />);
 
-  const input = todoItem
-    .children()
-    .findWhere((child) => child.type() === TodoTextInput);
-  expect(input.props().text).toBe("Use Redux");
-  expect(input.props().editing).toBe(true);
+  const listItem = screen.getByRole("listitem");
+  const label = within(listItem).getByText("Use Redux");
+  userEvent.dblClick(label);
+
+  const input = screen.getByRole("textbox");
+  userEvent.type(input, " twice{enter}");
+
+  expect(defaultProps.editTodo).toBeCalledWith(0, "Use Redux twice");
 });
 
-test("TodoTextInput onSave should call editTodo", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
-  const label = todoItem.find("label");
-  label.simulate("doubleClick");
+test("emptying input should call deleteTodo", () => {
+  render(<TodoItem {...defaultProps} />);
 
-  const input = todoItem
-    .children()
-    .findWhere((child) => child.type() === TodoTextInput);
+  const listItem = screen.getByRole("listitem");
+  const label = within(listItem).getByText("Use Redux");
+  userEvent.dblClick(label);
 
-  input.props().onSave("Use Redux");
-  expect(defaultProps.editTodo).toBeCalledWith(0, "Use Redux");
-});
+  const input = screen.getByRole("textbox");
+  userEvent.clear(input);
+  userEvent.type(input, "{enter}");
 
-test("TodoTextInput onSave should call deleteTodo if text is empty", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
-  const label = todoItem.find("label");
-  label.simulate("doubleClick");
-
-  const input = todoItem
-    .children()
-    .findWhere((child) => child.type() === TodoTextInput);
-
-  input.props().onSave("");
   expect(defaultProps.deleteTodo).toHaveBeenCalledWith(0);
 });
 
-test("TodoTextInput onSave should exit component from edit state", () => {
-  const todoItem = shallow(<TodoItem {...defaultProps} />);
-  const label = todoItem.find("label");
-  label.simulate("doubleClick");
+test("pressing enter should exit component from edit state", () => {
+  render(<TodoItem {...defaultProps} />);
 
-  const input = todoItem
-    .children()
-    .findWhere((child) => child.type() === TodoTextInput);
+  const listItem = screen.getByRole("listitem");
+  const label = within(listItem).getByText("Use Redux");
+  userEvent.dblClick(label);
 
-  input.props().onSave("Use Redux");
+  const input = screen.getByRole("textbox");
+  userEvent.type(input, "{enter}");
 
-  expect(todoItem.type()).toBe("li");
-  expect(todoItem.hasClass("")).toBe(true);
+  expect(listItem).not.toHaveClass("editing");
 });

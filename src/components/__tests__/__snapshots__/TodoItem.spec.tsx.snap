@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`initial render 1`] = `
+<DocumentFragment>
+  <li
+    class=""
+  >
+    <div
+      class="view"
+    >
+      <input
+        class="toggle"
+        type="checkbox"
+      />
+      <label>
+        Use Redux
+      </label>
+      <button
+        class="destroy"
+      />
+    </div>
+  </li>
+</DocumentFragment>
+`;
