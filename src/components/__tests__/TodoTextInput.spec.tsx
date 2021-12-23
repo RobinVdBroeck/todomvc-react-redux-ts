@@ -1,7 +1,9 @@
-import { configure, shallow } from "enzyme";
 import * as React from "react";
-import { TodoTextInput } from "../TodoTextInput";
+import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
+import { render, screen } from "@testing-library/react";
+import { TodoTextInput } from "../TodoTextInput";
+import userEvent from "@testing-library/user-event";
 
 beforeAll(() => {
   configure({ adapter: new Adapter() });
@@ -18,33 +20,27 @@ const defaultProps = () => {
 };
 
 test("should render correctly", () => {
-  const todoTextInput = shallow(<TodoTextInput {...defaultProps()} />);
+  render(<TodoTextInput {...defaultProps()} />);
 
-  expect(todoTextInput.props().placeholder).toBe("What needs to be done?");
-  expect(todoTextInput.props().value).toBe("Use Redux");
+  const input: HTMLInputElement = screen.getByRole("textbox");
+  expect(input.placeholder).toBe("What needs to be done?");
+  expect(input).toHaveValue("Use Redux");
+  // expect(todoTextInput.props().placeholder).toBe("What needs to be done?");
+  // expect(todoTextInput.props().value).toBe("Use Redux");
 });
 
 test("should render correctly when editing=true", () => {
-  const todoTextInput = shallow(
-    <TodoTextInput {...defaultProps()} editing={true} />
-  );
+  render(<TodoTextInput {...defaultProps()} editing />);
 
-  expect(todoTextInput.hasClass("edit")).toBe(true);
+  const input: HTMLInputElement = screen.getByRole("textbox");
+  expect(input).toHaveClass("edit");
 });
 
 test("should render correctly when newTodo=true", () => {
-  const todoTextInput = shallow(
-    <TodoTextInput {...defaultProps()} newTodo={true} />
-  );
-  expect(todoTextInput.hasClass("new-todo")).toBe(true);
-});
+  render(<TodoTextInput {...defaultProps()} newTodo />);
 
-test("should update value on change", () => {
-  const todoTextInput = shallow(<TodoTextInput {...defaultProps()} />);
-  todoTextInput.simulate("change", {
-    currentTarget: { value: "Use Radox" },
-  });
-  expect((todoTextInput.state() as any).text).toBe("Use Radox");
+  const input: HTMLInputElement = screen.getByRole("textbox");
+  expect(input).toHaveClass("edit");
 });
 
 test("should call onSave on return key press", () => {
@@ -58,9 +54,7 @@ test("should call onSave on return key press", () => {
 });
 
 test("should reset state on return key press if newTodo", () => {
-  const todoTextInput = shallow(
-    <TodoTextInput {...defaultProps()} newTodo={true} />
-  );
+  const todoTextInput = shallow(<TodoTextInput {...defaultProps()} newTodo />);
   todoTextInput.simulate("keydown", {
     which: 13,
     currentTarget: { value: "Use Redux" },
@@ -77,7 +71,7 @@ test("should call onSave on blur", () => {
 
 test("shouldnt call onSave on blur if newTodo", () => {
   const props = defaultProps();
-  const todoTextInput = shallow(<TodoTextInput {...props} newTodo={true} />);
+  const todoTextInput = shallow(<TodoTextInput {...props} newTodo />);
   todoTextInput.simulate("blur", {
     currentTarget: { value: "Use Redux" },
   });
